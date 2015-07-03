@@ -3,4 +3,6 @@ bin/
 .classpath
 .project
 .settings/
+.cache-main
+.cache-tests
 
