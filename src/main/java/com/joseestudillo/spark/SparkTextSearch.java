@@ -31,7 +31,7 @@ public class SparkTextSearch {
 		
 		log.info(String.format("searching in the content of the file %s", filepath));
 		
-		SparkConf conf = SparkUtils.getLocalConfig("TextSearch");
+		SparkConf conf = SparkUtils.getLocalConfig(SparkTextSearch.class.getSimpleName());
 		JavaSparkContext spark = new JavaSparkContext(conf);
 		JavaRDD<String> textFile = spark.textFile(filepath);
 		
@@ -51,6 +51,9 @@ public class SparkTextSearch {
 		List<String> resultsCollection = results.filter(filter1).collect();
 		log.info(String.format("results: %s", resultsCollection));
 		
+		log.info("Stopping spark...");
+		spark.stop();
 		spark.close();
+		log.info("Done");
 	}
 }
