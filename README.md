@@ -1,0 +1,1 @@
+- bin/spark-submit will also read configuration options from conf/spark-defaults.conf, in which each line consists of a key and a value separated by whitespace. 
