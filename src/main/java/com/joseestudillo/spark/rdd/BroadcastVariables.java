@@ -1,5 +1,5 @@
 package com.joseestudillo.spark.rdd;
 
-public class Grouping {
+public class BroadcastVariables {
 
 }

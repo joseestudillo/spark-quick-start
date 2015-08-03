@@ -10,6 +10,8 @@ import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.api.java.function.FlatMapFunction;
+import org.apache.spark.api.java.function.Function;
+import org.apache.spark.api.java.function.Function2;
 
 import com.joseestudillo.spark.SparkTextSearch;
 import com.joseestudillo.spark.utils.SparkUtils;
@@ -33,7 +35,7 @@ public class RddTransAndOps {
 		JavaRDD<Integer> intsRdd = spark.parallelize(integers);
 		log.info(String.format("Input integers collection: %s", intsRdd));
 		
-		// # map
+		// #map
 		stringsRdd = intsRdd.map((i) -> Integer.toString(i)); 
 		log.info(String.format("maps the integers into strings", stringsRdd.collect()));
 		
@@ -42,6 +44,20 @@ public class RddTransAndOps {
 		String stringReduction = stringsRdd.reduce((a,b) -> a + b);
 		log.info(String.format("Integers %s reduced using + to %s", intsRdd.collect(), intReduction));
 		log.info(String.format("Strings %s reduced using + to %s", stringsRdd.collect(), stringReduction));
+		
+		// #aggregate
+		
+		/* given type is Integer and result type will be string, you need two functions, one to mix integers with strings, and another one to mix strings*/
+		Function2<String, Integer, String> givenTypeCombiner = (a, b) -> String.format("(%s,%s)", a, Integer.toString(b)); //combine a given type with the result type
+		Function2<String, String, String> resultTypeCombiner = (a, b) -> String.format("[%s,%s]", a, b);// combine two result types
+		String aggregation = intsRdd.aggregate("", givenTypeCombiner, resultTypeCombiner);
+		log.info(String.format("Aggregation: %s", aggregation));
+		
+		// #count
+		log.info(String.format("Count of %s: %s", intsRdd.collect(), intsRdd.count()));
+		
+		// #countByValue
+		log.info(String.format("Count by value of %s: %s", intsRdd.collect(), intsRdd.countByValue()));
 		
 		// #union
 		JavaRDD<Integer> intsRdd2 = spark.parallelize(Stream.iterate(0, n -> n + 1).limit(5).collect(Collectors.toList()));
@@ -59,8 +75,10 @@ public class RddTransAndOps {
 		
 		// #sortBy
 		log.info(String.format("Unsorted union result: %s", unionRdd.collect()));
-		//for sortBy what you need is a function that give you a value to sort by, in this case we will use the string itself
-		JavaRDD<Integer> sortedRdd = unionRdd.sortBy(x -> x,true,1); 
+		//for sortBy what you need is a function that give you a value to sort by (functor), in this case we will use the string itself
+		
+		Function<Integer, ?> functor = x -> x;
+		JavaRDD<Integer> sortedRdd = unionRdd.sortBy(functor , true, 1); 
 		log.info(String.format("Collection sorted %s", sortedRdd.collect()));
 		
 		// #distinct
