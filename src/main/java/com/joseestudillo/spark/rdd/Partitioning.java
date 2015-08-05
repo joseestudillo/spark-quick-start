@@ -1,5 +1,6 @@
 package com.joseestudillo.spark.rdd;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -11,8 +12,10 @@ import org.apache.spark.Partitioner;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaSparkContext;
+import org.apache.spark.api.java.function.FlatMapFunction;
 import org.apache.spark.api.java.function.Function2;
 import org.apache.spark.api.java.function.PairFlatMapFunction;
+import org.apache.spark.api.java.function.VoidFunction;
 import org.apache.spark.storage.StorageLevel;
 
 import com.joseestudillo.spark.utils.SparkUtils;
@@ -45,7 +48,6 @@ public class Partitioning {
 		public boolean equals(Object obj) {
 			return obj instanceof CustomPartitioner && this.numPartitions() == ((CustomPartitioner) obj).numPartitions();
 		}
-
 	}
 
 	public static void main(String[] args) {
@@ -63,7 +65,7 @@ public class Partitioning {
 
 		JavaPairRDD<String, Integer> pairsRdd = JavaPairRDD.fromJavaRDD(spark.parallelize(pairs0));
 
-		PairFlatMapFunction<Iterator<Tuple2<String, Integer>>, Set<String>, Integer> pairFlapMapper = new PairFlatMapFunction<Iterator<Tuple2<String, Integer>>, Set<String>, Integer>() {
+		PairFlatMapFunction<Iterator<Tuple2<String, Integer>>, Set<String>, Integer> mapPartitionsToPairFunc = new PairFlatMapFunction<Iterator<Tuple2<String, Integer>>, Set<String>, Integer>() {
 
 			@Override
 			public Iterable<Tuple2<Set<String>, Integer>> call(Iterator<Tuple2<String, Integer>> tuples) throws Exception {
@@ -77,17 +79,20 @@ public class Partitioning {
 				}
 				return Arrays.asList(new Tuple2(keySet, size));
 			}
-
 		};
 		log.info(String.format("Original RDD: %s", pairsRdd.collect()));
-		log.info(String.format("Original RDD parition Info (keys, #elements): %s", pairsRdd.mapPartitionsToPair(pairFlapMapper).collect()));
+		log.info(String.format("Original RDD parition Info (keys, #elements): %s", pairsRdd.mapPartitionsToPair(mapPartitionsToPairFunc).collect()));
 		JavaPairRDD<String, Integer> partitionedPairsRdd = pairsRdd.partitionBy(new CustomPartitioner()).persist(StorageLevel.MEMORY_ONLY());
 		//when partitioning, It is important to check the persistence op have been performed, otherwise the partition operations is repeated every time.
 
-		log.info(String.format("Partitioned RDD partition Info (keys, #elements): %s", partitionedPairsRdd.mapPartitionsToPair(pairFlapMapper).collect()));
+		log.info(String.format("Partitioned RDD partition Info (keys, #elements): %s", partitionedPairsRdd.mapPartitionsToPair(mapPartitionsToPairFunc)
+				.collect()));
 
-		Function2<Integer, Iterator<Tuple2<String, Integer>>, Iterator<Tuple2<Integer, Integer>>> flatter = (index, tuplesIter) -> {
+		// #mapPartitionsWithIndex() Integer of partition number, and Iterator of the elements in that partition. f: (Int, Iterator[T]) -> Iterator[U]
+		Function2<Integer, Iterator<Tuple2<String, Integer>>, Iterator<Tuple2<Integer, Integer>>> mapPartitionsWithIndexFunc = (index, tuplesIter) -> {
+			//list of the values in each partition
 			int size = 0;
+			log.info("mapPartitionsWithIndexFunc.call");
 			for (; tuplesIter.hasNext();) {
 				Tuple2<String, Integer> tuple = tuplesIter.next();
 				size++;
@@ -95,8 +100,39 @@ public class Partitioning {
 			return Arrays.asList(new Tuple2<Integer, Integer>(index, size)).iterator();
 		};
 
-		log.info(String.format("Original RDD parition Info (PartitionIndex, #Elements): %s", pairsRdd.mapPartitionsWithIndex(flatter, true).collect()));
-		log.info(String.format("Partitioned RDD partition Info (PartitionIndex, #Elements): %s", partitionedPairsRdd.mapPartitionsWithIndex(flatter, true)
+		log.info(String.format("Original RDD parition Info (PartitionIndex, #Elements): %s", pairsRdd.mapPartitionsWithIndex(mapPartitionsWithIndexFunc, true)
 				.collect()));
+		log.info(String.format("Partitioned RDD partition Info (PartitionIndex, #Elements): %s", partitionedPairsRdd.mapPartitionsWithIndex(
+				mapPartitionsWithIndexFunc, true)
+				.collect()));
+
+		// #mapPartitions() Iterator of the elements in that partition. `f: (Iterator[T]) -> Iterator[U]`
+		FlatMapFunction<Iterator<Tuple2<String, Integer>>, String> mapPartitionsFunc = new FlatMapFunction<Iterator<Tuple2<String, Integer>>, String>() {
+			//function to get the keys, just as an example, it will be called for each partition and their results will be put together
+			@Override
+			public Iterable<String> call(Iterator<Tuple2<String, Integer>> tuplesIter) throws Exception {
+				List<String> list = new ArrayList<String>();
+				for (; tuplesIter.hasNext();) {
+					list.add(tuplesIter.next()._1);
+				}
+				log.info(String.format("mapPartitionsFunc.call -> %s", list));
+				return list;
+			}
+
+		};
+		log.info(String.format("mapPartitions: %s", partitionedPairsRdd.mapPartitions(mapPartitionsFunc).collect()));
+
+		// #foreachPartition() Iterator of the elements Nothing f: (Iterator[T]) -> Unit
+		VoidFunction<Iterator<Tuple2<String, Integer>>> foreachPartitionFunc = new VoidFunction<Iterator<Tuple2<String, Integer>>>() {
+
+			@Override
+			public void call(Iterator<Tuple2<String, Integer>> tuplesIter) throws Exception {
+				log.info("foreachPartitionFunc.call");
+				for (; tuplesIter.hasNext();) {
+					log.info(String.format("foreachPartitionFunc: %s", tuplesIter.next()));
+				}
+			}
+		};
+		partitionedPairsRdd.foreachPartition(foreachPartitionFunc);
 	}
 }

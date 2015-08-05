@@ -26,5 +26,6 @@ public class DoubleRDDs {
 		JavaRDD<Integer> intsRdd = spark.parallelize(integers);
 		JavaDoubleRDD doubleRdd = intsRdd.mapToDouble(a -> new Double(a));
 		log.info(String.format("DoubleRdd:%s mean:%s variance:%s", doubleRdd.collect(), doubleRdd.mean(), doubleRdd.variance()));
+		log.info(String.format("DoubleRdd:%s statistics:%s", doubleRdd.collect(), doubleRdd.stats()));
 	}
 }
