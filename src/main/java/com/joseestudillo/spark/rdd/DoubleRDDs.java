@@ -4,7 +4,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaDoubleRDD;
 import org.apache.spark.api.java.JavaRDD;
@@ -13,7 +14,7 @@ import org.apache.spark.api.java.JavaSparkContext;
 import com.joseestudillo.spark.utils.SparkUtils;
 
 public class DoubleRDDs {
-	private static final Logger log = Logger.getLogger(DoubleRDDs.class);
+	private static final Logger log = LogManager.getLogger(DoubleRDDs.class);
 
 	public static void main(String[] args) {
 		SparkConf conf = SparkUtils.getLocalConfig(DoubleRDDs.class.getSimpleName());

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+	<Appenders>
+		<Console name="STDOUT" target="SYSTEM_OUT">
+			<PatternLayout pattern="%d{dd/MM/yyyy HH:mm:ss,SSS} [%p]\t [%C{1}] %m%n" />
+		</Console>
+	</Appenders>
+	<Loggers>
+		<logger name="com.joseestudillo" additivity="false" level="DEBUG">
+			<AppenderRef ref="STDOUT" />
+		</logger>
+		<Root level="error">
+			<AppenderRef ref="STDOUT" />
+		</Root>
+	</Loggers>
+</Configuration>
+

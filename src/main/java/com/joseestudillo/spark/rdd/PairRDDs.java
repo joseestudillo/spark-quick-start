@@ -5,7 +5,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.spark.Partitioner;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaPairRDD;
@@ -21,7 +22,7 @@ import scala.Tuple2;
 
 public class PairRDDs {
 
-	private static final Logger log = Logger.getLogger(PairRDDs.class);
+	private static final Logger log = LogManager.getLogger(PairRDDs.class);
 
 	public static void main(String[] args) {
 		SparkConf conf = SparkUtils.getLocalConfig(PairRDDs.class.getSimpleName());

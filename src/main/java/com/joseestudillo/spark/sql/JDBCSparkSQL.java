@@ -6,7 +6,8 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.sql.DataFrame;
@@ -18,7 +19,7 @@ import com.joseestudillo.spark.utils.SparkUtils;
 
 public class JDBCSparkSQL {
 
-	private static final Logger log = Logger.getLogger(JDBCSparkSQL.class);
+	private static final Logger log = LogManager.getLogger(JDBCSparkSQL.class);
 
 	private static String CREATE_TMP_TABLE_QUERY = "CREATE TEMPORARY TABLE jdbc_table USING org.apache.spark.sql.jdbc OPTIONS ( url \"%s\", dbtable \"%s\")";
 

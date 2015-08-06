@@ -2,7 +2,8 @@ package com.joseestudillo.spark.sql;
 
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.sql.DataFrame;
@@ -16,7 +17,7 @@ import com.joseestudillo.spark.utils.SparkUtils;
 
 public class SparkSQL {
 
-	private static final Logger log = Logger.getLogger(SparkSQL.class);
+	private static final Logger log = LogManager.getLogger(SparkSQL.class);
 
 	public static void main(String[] args) {
 		SparkConf conf = SparkUtils.getLocalConfig(SparkTextSearch.class.getSimpleName());

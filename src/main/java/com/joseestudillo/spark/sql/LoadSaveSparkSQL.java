@@ -4,7 +4,8 @@ import java.io.File;
 import java.io.IOException;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.sql.DataFrame;
@@ -15,7 +16,7 @@ import com.joseestudillo.spark.utils.SparkUtils;
 
 public class LoadSaveSparkSQL {
 
-	private static final Logger log = Logger.getLogger(LoadSaveSparkSQL.class);
+	private static final Logger log = LogManager.getLogger(LoadSaveSparkSQL.class);
 
 	public static void main(String[] args) throws IOException {
 		SparkConf conf = SparkUtils.getLocalConfig(SparkTextSearch.class.getSimpleName());

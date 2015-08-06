@@ -7,7 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
 
 public class DerbyManager {
 	public static final String DERBY_DRIVER = "org.apache.derby.jdbc.EmbeddedDriver";

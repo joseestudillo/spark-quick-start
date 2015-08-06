@@ -2,7 +2,8 @@ package com.joseestudillo.spark.rdd;
 
 import java.util.Arrays;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
@@ -11,7 +12,7 @@ import com.joseestudillo.spark.utils.SparkUtils;
 
 public class Piping {
 
-	private static final Logger log = Logger.getLogger(Piping.class);
+	private static final Logger log = LogManager.getLogger(Piping.class);
 
 	public static void main(String[] args) {
 		SparkConf conf = SparkUtils.getLocalConfig(DoubleRDDs.class.getSimpleName());
