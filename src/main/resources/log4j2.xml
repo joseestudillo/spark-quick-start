@@ -6,6 +6,9 @@
 		</Console>
 	</Appenders>
 	<Loggers>
+		<logger name="org.apache" additivity="false" level="DEBUG">
+			<AppenderRef ref="STDOUT" />
+		</logger>
 		<logger name="com.joseestudillo" additivity="false" level="DEBUG">
 			<AppenderRef ref="STDOUT" />
 		</logger>

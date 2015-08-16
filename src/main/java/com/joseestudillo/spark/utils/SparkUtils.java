@@ -13,7 +13,7 @@ import scala.Tuple2;
 
 public class SparkUtils {
 
-	private static final String LOCAL_MASTER_ID = "local";
+	private static final String LOCAL_MASTER_ID = "local[*]";
 
 	public static SparkConf getLocalConfig(String appName) {
 		return new SparkConf().setAppName(appName).setMaster(LOCAL_MASTER_ID);
