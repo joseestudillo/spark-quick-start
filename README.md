@@ -14,7 +14,7 @@ Spark quick start introduction
   - Operation types:
   	- Transformations: are operations over an RDD that doesn't imply the generation of a result. Every transformation results in a new RDD. An example of this can be filtering an _RDD_. They are evaluated lazily, so these operations are only executed when an _action_ is called. 
   	- Actions: An operations that leads into the execution of the plan to generate a result. An example of this can be collecting the elemements in an RDD.
-- _Drive Program_: Main program, connect to the resource administrator and allocate workers.
+- _Driver Program_: Main program, connect to the resource administrator and allocate workers.
 - _Worker_: A machine in the cluster assigned to execute task.
 - _Executor_: Are launched by the driver and they remain until the work in done. They do two things, they run tasks to return result to the driver, and they provide in-memory storage for RDDs that are cached by user programs.
 - _Task_: Unit of work to be done.
