@@ -13,6 +13,11 @@ import org.apache.spark.api.java.JavaSparkContext;
 
 import com.joseestudillo.spark.utils.SparkUtils;
 
+/**
+ * 
+ * @author Jose Estudillo
+ *
+ */
 public class DoubleRDDs {
 	private static final Logger log = LogManager.getLogger(DoubleRDDs.class);
 

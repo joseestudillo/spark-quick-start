@@ -9,6 +9,11 @@ import org.apache.spark.api.java.JavaSparkContext;
 
 import com.joseestudillo.spark.utils.SparkUtils;
 
+/**
+ * 
+ * @author Jose Estudillo
+ *
+ */
 public class SparkLocalDriver {
 
 	private static final Logger log = LogManager.getLogger(SparkLocalDriver.class);

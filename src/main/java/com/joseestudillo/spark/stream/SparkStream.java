@@ -20,6 +20,14 @@ import com.joseestudillo.spark.utils.SparkUtils;
 
 import scala.Tuple2;
 
+/**
+ * Spark stream examples.
+ * 
+ * To try with a socket server use <code>nc -lk 9999</code>
+ * 
+ * @author Jose Estudillo
+ *
+ */
 public class SparkStream {
 
 	private static final Logger log = LogManager.getLogger(SparkStream.class);
@@ -40,7 +48,6 @@ public class SparkStream {
 		//NumberGeneratorServer.generateServer();
 		JavaDStream<String> dStream = jssc.socketTextStream("localhost", 9999);
 		//JavaDStream<String> dStream = jssc.textFileStream("/tmp/logs");
-		//JavaDStream<String> windowedDStream = dStream.window(Durations.seconds(10));
 
 		//do the work count
 		JavaPairDStream<String, Integer> pairs = dStream.mapToPair(s -> new Tuple2<String, Integer>(s, 1));

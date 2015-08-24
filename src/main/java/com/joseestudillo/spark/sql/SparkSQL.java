@@ -15,6 +15,11 @@ import org.apache.spark.sql.types.DataTypes;
 import com.joseestudillo.spark.SparkTextSearch;
 import com.joseestudillo.spark.utils.SparkUtils;
 
+/**
+ * 
+ * @author Jose Estudillo
+ *
+ */
 public class SparkSQL {
 
 	private static final Logger log = LogManager.getLogger(SparkSQL.class);

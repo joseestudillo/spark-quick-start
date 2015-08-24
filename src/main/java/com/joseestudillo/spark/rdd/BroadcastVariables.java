@@ -12,6 +12,13 @@ import org.apache.spark.broadcast.Broadcast;
 
 import com.joseestudillo.spark.utils.SparkUtils;
 
+/**
+ * 
+ * Broadcast variable examples
+ * 
+ * @author Jose Estudillo
+ *
+ */
 public class BroadcastVariables {
 
 	private final static Logger log = LogManager.getLogger(BroadcastVariables.class);

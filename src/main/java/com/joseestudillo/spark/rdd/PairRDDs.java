@@ -20,6 +20,11 @@ import com.joseestudillo.spark.utils.SparkUtils;
 
 import scala.Tuple2;
 
+/**
+ * 
+ * @author Jose Estudillo
+ *
+ */
 public class PairRDDs {
 
 	private static final Logger log = LogManager.getLogger(PairRDDs.class);

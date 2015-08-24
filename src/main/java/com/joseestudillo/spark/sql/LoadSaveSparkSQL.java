@@ -14,6 +14,11 @@ import org.apache.spark.sql.SQLContext;
 import com.joseestudillo.spark.SparkTextSearch;
 import com.joseestudillo.spark.utils.SparkUtils;
 
+/**
+ * 
+ * @author Jose Estudillo
+ *
+ */
 public class LoadSaveSparkSQL {
 
 	private static final Logger log = LogManager.getLogger(LoadSaveSparkSQL.class);

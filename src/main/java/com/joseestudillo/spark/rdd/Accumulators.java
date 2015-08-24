@@ -17,6 +17,13 @@ import org.apache.spark.api.java.JavaSparkContext;
 
 import com.joseestudillo.spark.utils.SparkUtils;
 
+/**
+ * 
+ * Accumulator examples
+ * 
+ * @author Jose Estudillo
+ *
+ */
 public class Accumulators {
 
 	private static final Logger log = LogManager.getLogger(Accumulators.class);

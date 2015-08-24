@@ -1,5 +1,6 @@
 package com.joseestudillo.spark.utils;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -9,11 +10,20 @@ import java.sql.Statement;
 
 import org.apache.logging.log4j.Logger;
 
+/**
+ * 
+ * Class to run an instance of Derby
+ * 
+ * @author Jose Estudillo
+ *
+ */
 public class DerbyManager {
 	public static final String DERBY_DRIVER = "org.apache.derby.jdbc.EmbeddedDriver";
+	public static final String DERBY_SERVER_CONN_STR_PATTERN = "jdbc:derby://localhost:1527/%s;create=true";;
 	public static final String DERBY_CONN_STR_PATTERN = "jdbc:derby:%s;create=true";
 	public static final String DERBY_SHUTDOWN_STR_PATTERN = "jdbc:derby:%s;shutdown=true";
 	public static final String DEFAULT_DB_NAME = "databaseName";
+	public static final String DEFAULT_DB_PATH_PTRN = "/tmp/derby/%s";
 
 	public static void loadDriver() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
 		Class.forName(DERBY_DRIVER).newInstance();
@@ -23,12 +33,24 @@ public class DerbyManager {
 		return String.format(DERBY_CONN_STR_PATTERN, databaseName);
 	}
 
+	public static final String getServerConnectionString(String databaseName) {
+		return String.format(DERBY_SERVER_CONN_STR_PATTERN, String.format(DEFAULT_DB_PATH_PTRN, databaseName));
+	}
+
+	public static final String getServerConnectionString(File storageDir) {
+		return String.format(DERBY_SERVER_CONN_STR_PATTERN, storageDir.getPath());
+	}
+
 	public static final Connection getDerbyConnection(String databaseName) throws SQLException {
 		return DriverManager.getConnection(getConnectionString(databaseName));
 	}
 
 	public static final Connection getDerbyConnection() throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException {
 		return getDerbyConnection(DEFAULT_DB_NAME);
+	}
+
+	public static final Connection getServerDerbyConnection() throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException {
+		return getDerbyConnection(getServerConnectionString(DEFAULT_DB_NAME));
 	}
 
 	public static final void shutdownDatabase(String dbName) throws SQLException {

@@ -14,6 +14,11 @@ import org.apache.spark.sql.hive.HiveContext;
 import com.joseestudillo.spark.SparkTextSearch;
 import com.joseestudillo.spark.utils.SparkUtils;
 
+/**
+ * 
+ * @author Jose Estudillo
+ *
+ */
 public class HiveSparkSQL {
 
 	private static final Logger log = LogManager.getLogger(HiveSparkSQL.class);
@@ -29,7 +34,7 @@ public class HiveSparkSQL {
 
 		HiveContext hiveContext = new org.apache.spark.sql.hive.HiveContext(spark.sc());
 
-		//TODO with any of these I'm able to set up the configuration programmatically, only placing hive-site.xml in the classpath works
+		//TODO with none of these I'm able to set up the configuration programmatically, only placing hive-site.xml in the classpath works
 		//		Properties properties = SparkUtils.loadProperties("/hive.properties");
 		//		for (Object property : properties.keySet()) {
 		//			String key = String.valueOf(property);

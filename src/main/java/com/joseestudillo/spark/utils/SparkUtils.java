@@ -11,6 +11,13 @@ import com.joseestudillo.spark.SparkTextSearch;
 
 import scala.Tuple2;
 
+/**
+ * 
+ * Utility class for Spark
+ * 
+ * @author Jose Estudillo
+ *
+ */
 public class SparkUtils {
 
 	private static final String LOCAL_MASTER_ID = "local[*]";

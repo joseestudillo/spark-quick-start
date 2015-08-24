@@ -23,6 +23,11 @@ import com.joseestudillo.spark.utils.SparkUtils;
 
 import scala.Tuple2;
 
+/**
+ * 
+ * @author Jose Estudillo
+ *
+ */
 public class Partitioning {
 
 	private static final Logger log = LogManager.getLogger(Partitioning.class);

@@ -17,6 +17,11 @@ import com.joseestudillo.spark.SparkTextSearch;
 import com.joseestudillo.spark.utils.DerbyManager;
 import com.joseestudillo.spark.utils.SparkUtils;
 
+/**
+ * 
+ * @author Jose Estudillo
+ *
+ */
 public class JDBCSparkSQL {
 
 	private static final Logger log = LogManager.getLogger(JDBCSparkSQL.class);

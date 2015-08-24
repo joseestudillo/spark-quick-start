@@ -17,6 +17,11 @@ import org.apache.spark.api.java.function.Function2;
 import com.joseestudillo.spark.SparkTextSearch;
 import com.joseestudillo.spark.utils.SparkUtils;
 
+/**
+ * 
+ * @author Jose Estudillo
+ *
+ */
 public class RddTransAndOps {
 
 	private static final Logger log = LogManager.getLogger(RddTransAndOps.class);

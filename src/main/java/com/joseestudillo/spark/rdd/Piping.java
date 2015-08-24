@@ -10,6 +10,11 @@ import org.apache.spark.api.java.JavaSparkContext;
 
 import com.joseestudillo.spark.utils.SparkUtils;
 
+/**
+ * 
+ * @author Jose Estudillo
+ *
+ */
 public class Piping {
 
 	private static final Logger log = LogManager.getLogger(Piping.class);

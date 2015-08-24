@@ -22,6 +22,11 @@ import org.apache.spark.sql.types.StructType;
 import com.joseestudillo.spark.SparkTextSearch;
 import com.joseestudillo.spark.utils.SparkUtils;
 
+/**
+ * 
+ * @author Jose Estudillo
+ *
+ */
 public class RDDSparkSQL {
 
 	private static final Logger log = LogManager.getLogger(RDDSparkSQL.class);
