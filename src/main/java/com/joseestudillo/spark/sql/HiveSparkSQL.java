@@ -15,9 +15,9 @@ import com.joseestudillo.spark.SparkTextSearch;
 import com.joseestudillo.spark.utils.SparkUtils;
 
 /**
+ * Example of how to use Hive from Spark
  * 
  * @author Jose Estudillo
- *
  */
 public class HiveSparkSQL {
 
@@ -26,13 +26,13 @@ public class HiveSparkSQL {
 	public static void main(String[] args) throws IOException {
 		SparkConf conf = SparkUtils.getLocalConfig(SparkTextSearch.class.getSimpleName());
 		log.info("access to the web interface at localhost:4040");
-		JavaSparkContext spark = new JavaSparkContext(conf);
+		JavaSparkContext sparkContext = new JavaSparkContext(conf);
 
 		String hiveInputFilepath = SparkUtils.getClasspathFileFullPath("hive-input.txt");
 		String hiveTableName = "hive_table";
 		String hiveQuery;
 
-		HiveContext hiveContext = new org.apache.spark.sql.hive.HiveContext(spark.sc());
+		HiveContext hiveContext = new org.apache.spark.sql.hive.HiveContext(sparkContext.sc());
 
 		//TODO with none of these I'm able to set up the configuration programmatically, only placing hive-site.xml in the classpath works
 		//		Properties properties = SparkUtils.loadProperties("/hive.properties");
@@ -65,7 +65,7 @@ public class HiveSparkSQL {
 
 		//join between hive and rdd
 		String jsonTableName = "json_table";
-		SQLContext sqlContext = new SQLContext(spark);
+		SQLContext sqlContext = new SQLContext(sparkContext);
 		String jsonInputFilename = SparkUtils.getClasspathFileFullPath("table.json");
 		DataFrame jsonDataFrame = sqlContext.read().json(jsonInputFilename);
 		jsonDataFrame.registerTempTable(jsonTableName);
@@ -80,6 +80,6 @@ public class HiveSparkSQL {
 		log.info(String.format("Joined table: %s with %s having %s=%s:", hiveTableName, jsonTableName, "key", "id"));
 		joinResultDataFrame.show();
 
-		spark.close();
+		sparkContext.close();
 	}
 }

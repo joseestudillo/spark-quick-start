@@ -28,9 +28,9 @@ import scala.Tuple2;
  * @author Jose Estudillo
  *
  */
-public class SparkStream {
+public class SparkStreaming {
 
-	private static final Logger log = LogManager.getLogger(SparkStream.class);
+	private static final Logger log = LogManager.getLogger(SparkStreaming.class);
 
 	private static final int baseDuration = 2;
 
@@ -47,6 +47,7 @@ public class SparkStream {
 		JavaStreamingContext jssc = new JavaStreamingContext(conf, batchDuration);
 		//NumberGeneratorServer.generateServer();
 		JavaDStream<String> dStream = jssc.socketTextStream("localhost", 9999);
+		//spark automatically monitor the directory, but it doesn't monitor modified files.
 		//JavaDStream<String> dStream = jssc.textFileStream("/tmp/logs");
 
 		//do the work count

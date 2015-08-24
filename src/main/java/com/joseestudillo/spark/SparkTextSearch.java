@@ -12,6 +12,7 @@ import org.apache.spark.api.java.function.Function;
 import com.joseestudillo.spark.utils.SparkUtils;
 
 /**
+ * Modification from the original example given in the official Spark documentation
  * 
  * @author Jose Estudillo
  *
@@ -22,11 +23,6 @@ public class SparkTextSearch {
 
 	public static Function<String, Boolean> containsFilter(final String searchStr) {
 		return s -> s.contains(searchStr);
-		//		return new Function<String, Boolean>() {
-		//			public Boolean call(String s) {
-		//				return s.contains(searchStr);
-		//			}
-		//		};
 	}
 
 	public static void main(String[] args) {

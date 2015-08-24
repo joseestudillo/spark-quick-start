@@ -26,7 +26,7 @@ public class BroadcastVariables {
 	public static void main(String[] args) {
 		SparkConf conf = SparkUtils.getLocalConfig(DoubleRDDs.class.getSimpleName());
 		log.info("access to the web interface at localhost:4040");
-		JavaSparkContext spark = new JavaSparkContext(conf);
+		JavaSparkContext sparkContext = new JavaSparkContext(conf);
 
 		List<Integer> integers = Stream.iterate(0, n -> n + 1).limit(100).collect(Collectors.toList());
 
@@ -34,7 +34,7 @@ public class BroadcastVariables {
 		//the value of spark.serializer affects to this, as the values of broadcast variables must be serialized to be sent to all the workers
 
 		//creation
-		Broadcast<List<Integer>> broadcastedIntList = spark.broadcast(integers);
+		Broadcast<List<Integer>> broadcastedIntList = sparkContext.broadcast(integers);
 
 		//access
 		broadcastedIntList.getValue();

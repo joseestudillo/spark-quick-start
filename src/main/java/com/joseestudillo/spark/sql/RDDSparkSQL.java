@@ -23,6 +23,7 @@ import com.joseestudillo.spark.SparkTextSearch;
 import com.joseestudillo.spark.utils.SparkUtils;
 
 /**
+ * Example of RDD manipulation using DataFrames
  * 
  * @author Jose Estudillo
  *
@@ -31,7 +32,7 @@ public class RDDSparkSQL {
 
 	private static final Logger log = LogManager.getLogger(RDDSparkSQL.class);
 
-	//bean to hold the data read from the input RDD. this class must be serializable.
+	//bean to hold the data read from the input RDD. this class must be Serializable.
 	public static class DataBean implements Serializable {
 		private String name;
 		private long id;
@@ -66,14 +67,14 @@ public class RDDSparkSQL {
 	public static void main(String[] args) {
 		SparkConf conf = SparkUtils.getLocalConfig(SparkTextSearch.class.getSimpleName());
 		log.info("access to the web interface at localhost:4040");
-		JavaSparkContext spark = new JavaSparkContext(conf);
+		JavaSparkContext sparkContext = new JavaSparkContext(conf);
 
-		SQLContext sqlContext = new SQLContext(spark);
+		SQLContext sqlContext = new SQLContext(sparkContext);
 
 		List<String> inputList = Arrays.asList("abc, 1", "def, 2", "ghi, 3");
-		JavaRDD<String> inputRdd = spark.parallelize(inputList);
+		JavaRDD<String> inputRdd = sparkContext.parallelize(inputList);
 
-		// #Read data using beans (data => bean =using spark lib + class definition=> table)
+		// #Read data using beans (data => bean = using spark lib + class definition => table)
 		org.apache.spark.api.java.function.Function<String, DataBean> parseDataBean = s -> {
 			String[] tokens = s.split(",");
 			return new DataBean(tokens[0], Long.parseLong(tokens[1].trim()));
@@ -92,7 +93,7 @@ public class RDDSparkSQL {
 		Function<Row, String> fromRowToString = row -> String.format("Row: {id:%s, name:%s}", row.getLong(0), row.getString(1));
 		log.info(String.format("Transforming rowRdd %s into strings: %s", rddFromDataFrame.collect(), rddFromDataFrame.map(fromRowToString).collect()));
 
-		// #Read data using plain data and defining the schema (data => row =using squema=> table)
+		// #Read data using plain data and defining the schema (data => row =using schema => table)
 		//define the column names/types
 		List<StructField> columnTypes = new ArrayList<StructField>();
 		columnTypes.add(DataTypes.createStructField("id", DataTypes.LongType, true));

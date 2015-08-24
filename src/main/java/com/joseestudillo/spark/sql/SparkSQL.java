@@ -16,6 +16,7 @@ import com.joseestudillo.spark.SparkTextSearch;
 import com.joseestudillo.spark.utils.SparkUtils;
 
 /**
+ * Example of general operations in Spark SQL
  * 
  * @author Jose Estudillo
  *
@@ -27,9 +28,9 @@ public class SparkSQL {
 	public static void main(String[] args) {
 		SparkConf conf = SparkUtils.getLocalConfig(SparkTextSearch.class.getSimpleName());
 		log.info("access to the web interface at localhost:4040");
-		JavaSparkContext spark = new JavaSparkContext(conf);
+		JavaSparkContext sparkContext = new JavaSparkContext(conf);
 
-		SQLContext sqlContext = new SQLContext(spark);
+		SQLContext sqlContext = new SQLContext(sparkContext);
 
 		String tableName = "json_table";
 		String field0 = "value";
@@ -78,6 +79,6 @@ public class SparkSQL {
 		log.info(String.format("Using the UDF %s in the query: %s", udfName, query));
 		udfAppliedDataFrame.show();
 
-		spark.close();
+		sparkContext.close();
 	}
 }

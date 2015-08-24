@@ -18,6 +18,7 @@ import com.joseestudillo.spark.SparkTextSearch;
 import com.joseestudillo.spark.utils.SparkUtils;
 
 /**
+ * Example of RDDs operations
  * 
  * @author Jose Estudillo
  *
@@ -29,16 +30,16 @@ public class RddTransAndOps {
 	public static void main(String[] args) {
 		SparkConf conf = SparkUtils.getLocalConfig(SparkTextSearch.class.getSimpleName());
 		log.info("access to the web interface at localhost:4040");
-		JavaSparkContext spark = new JavaSparkContext(conf);
+		JavaSparkContext sparkContext = new JavaSparkContext(conf);
 
 		// # Load info from text files
 		String filepath = SparkUtils.getClasspathFileFullPath("numbers.txt");
 		JavaRDD<String> stringsRdd;
-		stringsRdd = spark.textFile(filepath);
+		stringsRdd = sparkContext.textFile(filepath);
 
 		// # Loading information in a collection to spark
 		List<Integer> integers = Stream.iterate(0, n -> n + 1).limit(10).collect(Collectors.toList());
-		JavaRDD<Integer> intsRdd = spark.parallelize(integers);
+		JavaRDD<Integer> intsRdd = sparkContext.parallelize(integers);
 		log.info(String.format("Input integers collection: %s", intsRdd));
 
 		// #map
@@ -66,7 +67,7 @@ public class RddTransAndOps {
 		log.info(String.format("Count by value of %s: %s", intsRdd.collect(), intsRdd.countByValue()));
 
 		// #union
-		JavaRDD<Integer> intsRdd2 = spark.parallelize(Stream.iterate(0, n -> n + 1).limit(5).collect(Collectors.toList()));
+		JavaRDD<Integer> intsRdd2 = sparkContext.parallelize(Stream.iterate(0, n -> n + 1).limit(5).collect(Collectors.toList()));
 		JavaRDD<Integer> unionRdd = intsRdd.union(intsRdd2);
 		log.info(String.format("Union(%s, %s): %s", intsRdd.collect(), intsRdd2.collect(), unionRdd.collect()));
 

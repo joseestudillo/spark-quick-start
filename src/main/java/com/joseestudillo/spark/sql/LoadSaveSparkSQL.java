@@ -15,6 +15,7 @@ import com.joseestudillo.spark.SparkTextSearch;
 import com.joseestudillo.spark.utils.SparkUtils;
 
 /**
+ * Example of loading/saving data to/from Spark
  * 
  * @author Jose Estudillo
  *
@@ -26,9 +27,9 @@ public class LoadSaveSparkSQL {
 	public static void main(String[] args) throws IOException {
 		SparkConf conf = SparkUtils.getLocalConfig(SparkTextSearch.class.getSimpleName());
 		log.info("access to the web interface at localhost:4040");
-		JavaSparkContext spark = new JavaSparkContext(conf);
+		JavaSparkContext sparkContext = new JavaSparkContext(conf);
 
-		SQLContext sqlContext = new SQLContext(spark);
+		SQLContext sqlContext = new SQLContext(sparkContext);
 
 		String tableName = "jsonTable";
 		String field0 = "value";

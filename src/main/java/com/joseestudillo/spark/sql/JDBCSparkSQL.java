@@ -18,6 +18,7 @@ import com.joseestudillo.spark.utils.DerbyManager;
 import com.joseestudillo.spark.utils.SparkUtils;
 
 /**
+ * Example of JDBC in spark
  * 
  * @author Jose Estudillo
  *
@@ -31,7 +32,7 @@ public class JDBCSparkSQL {
 	public static void main(String[] args) throws IOException, InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException {
 		SparkConf conf = SparkUtils.getLocalConfig(SparkTextSearch.class.getSimpleName());
 		log.info("access to the web interface at localhost:4040");
-		JavaSparkContext spark = new JavaSparkContext(conf);
+		JavaSparkContext sparkContext = new JavaSparkContext(conf);
 
 		String databaseName = "spark_database";
 		String connStr = DerbyManager.getConnectionString(databaseName);
@@ -44,7 +45,7 @@ public class JDBCSparkSQL {
 		log.info(String.format("Content in the table '%s':", dbtable));
 		DerbyManager.logDummyTableContent(conn, log);
 
-		SQLContext sqlContext = new SQLContext(spark);
+		SQLContext sqlContext = new SQLContext(sparkContext);
 
 		// this appears in the latest version of the documentation (1.4) but it is mark as deprecated
 		Map<String, String> options = new HashMap<String, String>();
@@ -60,6 +61,6 @@ public class JDBCSparkSQL {
 		jdbcDataFrame.show();
 
 		conn.close();
-		spark.close();
+		sparkContext.close();
 	}
 }
