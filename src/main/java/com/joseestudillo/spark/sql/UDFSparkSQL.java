@@ -1,33 +1,34 @@
 package com.joseestudillo.spark.sql;
 
-import java.util.List;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.sql.DataFrame;
-import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SQLContext;
+import org.apache.spark.sql.api.java.UDF1;
+import org.apache.spark.sql.types.DataTypes;
 
 import com.joseestudillo.spark.SparkTextSearch;
 import com.joseestudillo.spark.utils.SparkUtils;
 
 /**
- * Example of general queries in Spark
+ * Example UDF creation and use in Spark
  * 
  * @author Jose Estudillo
  *
  */
-public class SparkSQL {
+public class UDFSparkSQL {
 
-	private static final Logger log = LogManager.getLogger(SparkSQL.class);
+	private static final Logger log = LogManager.getLogger(UDFSparkSQL.class);
 
 	private static final String JSON_TABLE_FILENAME = "table.json";
 
 	private static final String TABLE_NAME = "json_table";
 	private static final String FIELD_VALUE = "value";
 	private static final String FIELD_ID = "id";
+
+	private static final String UDF_NAME = "strLen";
 
 	public static void main(String[] args) {
 		SparkConf conf = SparkUtils.getLocalConfig(SparkTextSearch.class.getSimpleName());
@@ -43,31 +44,14 @@ public class SparkSQL {
 		log.info("Show the whole table");
 		jsonDataFrame.show();
 
-		log.info("Show table schema info");
-		jsonDataFrame.printSchema();
+		log.info(String.format("Declaring the UDF: %s", UDF_NAME));
+		UDF1<?, ?> udf = (String s) -> s.length();
+		sqlContext.udf().register(UDF_NAME, udf, DataTypes.IntegerType);
 
-		log.info("Use as resultSet");
-		List<Row> rows = jsonDataFrame.select(FIELD_VALUE).collectAsList();
-		for (Row row : rows) {
-			log.info(row);
-		}
-
-		log.info(String.format("select %s, %s +1", FIELD_VALUE, FIELD_ID));
-		jsonDataFrame.select(jsonDataFrame.col(FIELD_VALUE), jsonDataFrame.col(FIELD_ID).plus(1)).show();
-
-		log.info(String.format("filter by %s > 0", FIELD_ID));
-		jsonDataFrame.filter(jsonDataFrame.col(FIELD_ID).gt(0)).show();
-
-		log.info(String.format("group by %s", FIELD_VALUE));
-		jsonDataFrame.groupBy(FIELD_VALUE).count().show();
-
-		log.info(String.format("group by %s", FIELD_ID));
-		jsonDataFrame.groupBy(FIELD_ID).count().show();
-
-		String query = String.format("SELECT * FROM %s", TABLE_NAME);
-		DataFrame sqlDataFrame = jsonDataFrame.sqlContext().sql(query);
-		log.info(String.format("Using query: %s", query));
-		sqlDataFrame.show();
+		String query = String.format("SELECT %1$s, %2$s(%1$s) FROM %3$s", FIELD_VALUE, UDF_NAME, TABLE_NAME);
+		DataFrame udfAppliedDataFrame = jsonDataFrame.sqlContext().sql(query);
+		log.info(String.format("Using the UDF %s in the query: %s", UDF_NAME, query));
+		udfAppliedDataFrame.show();
 
 		sparkContext.close();
 	}

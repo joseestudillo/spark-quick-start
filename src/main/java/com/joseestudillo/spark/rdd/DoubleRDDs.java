@@ -14,24 +14,29 @@ import org.apache.spark.api.java.JavaSparkContext;
 import com.joseestudillo.spark.utils.SparkUtils;
 
 /**
+ * DoubleRDD examples
+ * 
+ * DoubleRDDs have some special operations for numbers like mean or variance
  * 
  * @author Jose Estudillo
  *
  */
 public class DoubleRDDs {
+
 	private static final Logger log = LogManager.getLogger(DoubleRDDs.class);
 
 	public static void main(String[] args) {
 		SparkConf conf = SparkUtils.getLocalConfig(DoubleRDDs.class.getSimpleName());
-		log.info("access to the web interface at localhost:4040");
-		JavaSparkContext spark = new JavaSparkContext(conf);
+		log.info(String.format("access to the web interface at localhost: %s", SparkUtils.SPARK_UI_PORT));
+		JavaSparkContext sparkContext = new JavaSparkContext(conf);
 
 		// #DoubleRDD
-		// DoubleRDD has some special operations for numbers like mean or variance
 		List<Integer> integers = Stream.iterate(0, n -> n + 1).limit(10).collect(Collectors.toList());
-		JavaRDD<Integer> intsRdd = spark.parallelize(integers);
+		JavaRDD<Integer> intsRdd = sparkContext.parallelize(integers);
 		JavaDoubleRDD doubleRdd = intsRdd.mapToDouble(a -> new Double(a));
 		log.info(String.format("DoubleRdd:%s mean:%s variance:%s", doubleRdd.collect(), doubleRdd.mean(), doubleRdd.variance()));
 		log.info(String.format("DoubleRdd:%s statistics:%s", doubleRdd.collect(), doubleRdd.stats()));
+
+		sparkContext.close();
 	}
 }

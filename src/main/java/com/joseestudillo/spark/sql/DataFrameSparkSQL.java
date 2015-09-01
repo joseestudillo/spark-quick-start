@@ -23,17 +23,22 @@ import com.joseestudillo.spark.SparkTextSearch;
 import com.joseestudillo.spark.utils.SparkUtils;
 
 /**
- * Example of RDD manipulation using DataFrames
+ * Example of loading data into DataFrames from RDDs
  * 
  * @author Jose Estudillo
  *
  */
-public class RDDSparkSQL {
+public class DataFrameSparkSQL {
 
-	private static final Logger log = LogManager.getLogger(RDDSparkSQL.class);
+	private static final Logger log = LogManager.getLogger(DataFrameSparkSQL.class);
+
+	private static final String TABLE_NAME = "databean_table";
 
 	//bean to hold the data read from the input RDD. this class must be Serializable.
 	public static class DataBean implements Serializable {
+
+		private static final long serialVersionUID = 1L;
+
 		private String name;
 		private long id;
 
@@ -66,7 +71,7 @@ public class RDDSparkSQL {
 
 	public static void main(String[] args) {
 		SparkConf conf = SparkUtils.getLocalConfig(SparkTextSearch.class.getSimpleName());
-		log.info("access to the web interface at localhost:4040");
+		log.info(String.format("access to the web interface at localhost: %s", SparkUtils.SPARK_UI_PORT));
 		JavaSparkContext sparkContext = new JavaSparkContext(conf);
 
 		SQLContext sqlContext = new SQLContext(sparkContext);
@@ -74,27 +79,31 @@ public class RDDSparkSQL {
 		List<String> inputList = Arrays.asList("abc, 1", "def, 2", "ghi, 3");
 		JavaRDD<String> inputRdd = sparkContext.parallelize(inputList);
 
-		// #Read data using beans (data => bean = using spark lib + class definition => table)
-		org.apache.spark.api.java.function.Function<String, DataBean> parseDataBean = s -> {
+		// # Read data into a data frame using beans
+		org.apache.spark.api.java.function.Function<String, DataBean> fromTextToDataBean = s -> {
 			String[] tokens = s.split(",");
 			return new DataBean(tokens[0], Long.parseLong(tokens[1].trim()));
 		};
 
-		JavaRDD<DataBean> dataBeanRdd = inputRdd.map(parseDataBean);
-		log.info(String.format("Transforming the input %s into %s", inputRdd.collect(), dataBeanRdd.collect()));
+		// transform the plain text into DataBeans
+		JavaRDD<DataBean> dataBeanRDD = inputRdd.map(fromTextToDataBean);
+		log.info(String.format("Transforming the input %s into dataBeans %s", inputRdd.collect(), dataBeanRDD.collect()));
 
-		DataFrame schemaData = sqlContext.createDataFrame(dataBeanRdd, DataBean.class);
-		String tableName = "dataBeanTable";
-		schemaData.registerTempTable(tableName);
-		log.info(String.format("Table '%s' generated from %s:", tableName, dataBeanRdd.collect()));
-		schemaData.show();
+		// Create a DataFrame from the DataBeans RDD
+		DataFrame dataBeanDataFrame = sqlContext.createDataFrame(dataBeanRDD, DataBean.class);
+		dataBeanDataFrame.registerTempTable(TABLE_NAME);
+		log.info(String.format("Table '%s' generated from %s:", TABLE_NAME, dataBeanRDD.collect()));
+		dataBeanDataFrame.show();
 
-		JavaRDD<Row> rddFromDataFrame = schemaData.javaRDD();
+		// Get all the rows in the dataFrame
+		JavaRDD<Row> rddFromDataFrame = dataBeanDataFrame.javaRDD();
+
+		// log the rows in a JSON format
 		Function<Row, String> fromRowToString = row -> String.format("Row: {id:%s, name:%s}", row.getLong(0), row.getString(1));
 		log.info(String.format("Transforming rowRdd %s into strings: %s", rddFromDataFrame.collect(), rddFromDataFrame.map(fromRowToString).collect()));
 
-		// #Read data using plain data and defining the schema (data => row =using schema => table)
-		//define the column names/types
+		// # Read data into a dataframe using plain data and defining the schema
+		// define the column names/types
 		List<StructField> columnTypes = new ArrayList<StructField>();
 		columnTypes.add(DataTypes.createStructField("id", DataTypes.LongType, true));
 		columnTypes.add(DataTypes.createStructField("name", DataTypes.StringType, true));
@@ -102,17 +111,18 @@ public class RDDSparkSQL {
 
 		log.info(String.format("Table Squema: %s", tableSchema));
 
-		Function<String, Row> fromStringToRow = record -> {
-			String[] fields = record.split(",");
+		// Create rows (Row) from plain text
+		Function<String, Row> fromStringToRow = inputText -> {
+			String[] fields = inputText.split(",");
 			return (Row) RowFactory.create(fields[1].trim(), fields[0]);
 		};
-		JavaRDD<Row> rowsFromDataRdd = inputRdd.map(fromStringToRow);
-		log.info(String.format("inputRdd %s => outputRowRdd %s", inputRdd.collect(), rowsFromDataRdd.collect()));
+		JavaRDD<Row> rowsFromDataRDD = inputRdd.map(fromStringToRow);
+		log.info(String.format("inputRdd %s -> outputRowRdd %s", inputRdd.collect(), rowsFromDataRDD.collect()));
 
-		// Apply the schema to the RDD.
-		DataFrame definedSchemaDataFrame = sqlContext.createDataFrame(rowsFromDataRdd, tableSchema);
-		definedSchemaDataFrame.registerTempTable(tableName);
-		log.info(String.format("Table '%s' generated from %s:", tableName, rowsFromDataRdd.collect()));
+		// Apply the schema to the RDD and load the Rows from the RDD.
+		DataFrame definedSchemaDataFrame = sqlContext.createDataFrame(rowsFromDataRDD, tableSchema);
+		definedSchemaDataFrame.registerTempTable(TABLE_NAME);
+		log.info(String.format("Table '%s' generated from %s:", TABLE_NAME, rowsFromDataRDD.collect()));
 		definedSchemaDataFrame.show();
 
 	}

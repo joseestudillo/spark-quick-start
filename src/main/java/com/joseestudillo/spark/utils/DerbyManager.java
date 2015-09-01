@@ -70,7 +70,9 @@ public class DerbyManager {
 
 	public static void createDummyTable(Connection conn) throws SQLException {
 		Statement st = conn.createStatement();
-		st.execute(DELETE_TABLE);
+		try {//hack to simulate DROP IF EXISTS
+			st.execute(DELETE_TABLE);
+		} catch (Exception e) {}
 		st.execute(CREATE_TABLE);
 		PreparedStatement pst = conn.prepareStatement(INSERT_PS);
 		for (int i = 0; i < 3; i++) {

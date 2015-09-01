@@ -11,6 +11,7 @@ import org.apache.spark.api.java.JavaSparkContext;
 import com.joseestudillo.spark.utils.SparkUtils;
 
 /**
+ * Piping example
  * 
  * @author Jose Estudillo
  *
@@ -21,14 +22,14 @@ public class Piping {
 
 	public static void main(String[] args) {
 		SparkConf conf = SparkUtils.getLocalConfig(DoubleRDDs.class.getSimpleName());
-		log.info("access to the web interface at localhost:4040");
-		JavaSparkContext spark = new JavaSparkContext(conf);
+		log.info(String.format("access to the web interface at localhost: %s", SparkUtils.SPARK_UI_PORT));
+		JavaSparkContext sparkContext = new JavaSparkContext(conf);
 
 		String command = "grep -E [0-9]+";
-		JavaRDD<String> inputRdd = spark.parallelize(Arrays.asList("1", "2", "3", "a", "b", "c"));
+		JavaRDD<String> inputRdd = sparkContext.parallelize(Arrays.asList("1", "2", "3", "a", "b", "c"));
 		JavaRDD<String> outputRdd = inputRdd.pipe(command);
-		log.info(String.format("Applying '%s' to the input %s ==> %s", command, inputRdd.collect(), outputRdd.collect()));
+		log.info(String.format("Applying '%s' to the input %s -> %s", command, inputRdd.collect(), outputRdd.collect()));
 
-		spark.close();
+		sparkContext.close();
 	}
 }

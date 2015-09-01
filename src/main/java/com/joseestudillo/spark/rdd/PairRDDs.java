@@ -21,6 +21,7 @@ import com.joseestudillo.spark.utils.SparkUtils;
 import scala.Tuple2;
 
 /**
+ * PairRdd examples
  * 
  * @author Jose Estudillo
  *
@@ -31,7 +32,7 @@ public class PairRDDs {
 
 	public static void main(String[] args) {
 		SparkConf conf = SparkUtils.getLocalConfig(PairRDDs.class.getSimpleName());
-		log.info("access to the web interface at localhost:4040");
+		log.info(String.format("access to the web interface at localhost: %s", SparkUtils.SPARK_UI_PORT));
 		JavaSparkContext spark = new JavaSparkContext(conf);
 
 		List<Integer> integers = Stream.iterate(0, n -> n + 1).limit(10).collect(Collectors.toList());
@@ -71,21 +72,32 @@ public class PairRDDs {
 		log.info(String.format("%s groupByKey(2 partitions): %s", pairsRdd0.collect(), pairsRdd0.groupByKey(2).collect()));
 
 		// ##combineByKey(createCombiner, mergeValue, mergeCombiners, partitioner)`
+		@SuppressWarnings("resource")
+		/** Creates a type from the RDD type that can be combined */
 		Function<Integer, Double> createCombiner = a -> {
 			Double result = new Double(a);
 			log.info(String.format("%s -combiner-> %s", a, result));
 			return result;
 		};
+
+		@SuppressWarnings("resource")
+		/** Allows to merge the type of the RDD with a combiner */
 		Function2<Double, Integer, Double> mergeValue = (i, d) -> {
 			Double result = new Double(i) + d;
 			log.info(String.format("(%s, %s) -mergeValues-> %s", i, d, result));
 			return result;
 		};
+
+		@SuppressWarnings("resource")
+		/** Merges two combiners */
 		Function2<Double, Double, Double> mergeCombiners = (d0, d1) -> {
 			Double result = d0 + d1;
 			log.info(String.format("(%s, %s) -mergeCombiners-> %s", d0, d1, result));
 			return result;
 		};
+
+		@SuppressWarnings("serial")
+		/** Decides to which partition a value is sent according to its Key */
 		Partitioner partitioner = new Partitioner() {
 
 			@Override
@@ -100,6 +112,7 @@ public class PairRDDs {
 				return result;
 			}
 		};
+
 		log.info(String.format("%s combineByKey %s", pairsRdd0.collect(), pairsRdd0.combineByKey(createCombiner, mergeValue, mergeCombiners, partitioner)
 				.collect()));
 
@@ -109,7 +122,7 @@ public class PairRDDs {
 		// ##flatMapValues: [(k, [v0, v1])] -> [(k,v0), (k, v1)]
 		JavaPairRDD<String, List<Integer>> tmpPairsRdd = pairsRdd0.mapValues(a -> Arrays.asList(a, a));
 		Function<List<Integer>, Iterable<Integer>> flattener = l -> l;
-		log.info(String.format("%s flatMapValues(l -> l) %s", pairsRdd0.collect(), tmpPairsRdd.flatMapValues(flattener).collect()));
+		log.info(String.format("%s flatMapValues(list -> list) %s", tmpPairsRdd.collect(), tmpPairsRdd.flatMapValues(flattener).collect()));
 
 		// ##keys()
 		log.info(String.format("%s keys %s", pairsRdd0.collect(), pairsRdd0.keys().collect()));

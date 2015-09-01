@@ -9,38 +9,42 @@ import org.apache.spark.sql.SQLContext;
 import com.joseestudillo.spark.SparkTextSearch;
 import com.joseestudillo.spark.utils.SparkUtils;
 
+/**
+ * Example of caching tables and dataframes in Spark
+ * 
+ * @author Jose Estudillo
+ *
+ */
 public class MemoryManagementSparkSQL {
 
 	public static final Logger log = Logger.getLogger(MemoryManagementSparkSQL.class);
 
+	public static final String TABLE_NAME = "json_table";
+
 	public static void main(String[] args) {
 		SparkConf conf = SparkUtils.getLocalConfig(SparkTextSearch.class.getSimpleName());
-		log.info("access to the web interface at localhost:4040");
+		log.info(String.format("access to the web interface at localhost: %s", SparkUtils.SPARK_UI_PORT));
 		JavaSparkContext sparkContext = new JavaSparkContext(conf);
 
 		SQLContext sqlContext = new SQLContext(sparkContext);
 
-		String tableName = "json_table";
-		String field0 = "value";
-		String field1 = "id";
-
-		DataFrame jsonDataFrame = sqlContext.read().json(SparkUtils.getClasspathFileFullPath("table.json"));
-		jsonDataFrame.registerTempTable(tableName); //this gives a name to the table making it accessible
+		DataFrame jsonDataFrame = sqlContext.read().json(SparkUtils.getClasspathFileURI("table.json"));
+		jsonDataFrame.registerTempTable(TABLE_NAME); //this gives a name to the table making it accessible
 
 		//for dataFrames, the caching is done as in any other RDD
 		log.info("Caching DataFrame");
 		jsonDataFrame.cache();
 
-		// Caching a table is also configured using configuration properties in Spark that can be set as follows:
+		// Caching a table is also configured using configuration properties in Spark. For example:
 		//sqlContext.setConf("spark.sql.inMemoryColumnarStorage.compressed", "false");
 		//sqlContext.setConf("spark.sql.inMemoryColumnarStorage.batchSize", "1000");
 
 		log.info("Caching Table");
-		sqlContext.cacheTable(tableName);
+		sqlContext.cacheTable(TABLE_NAME);
 
 		//do intensive operations with the table
 
 		log.info("Uncaching Table");
-		sqlContext.uncacheTable(tableName);
+		sqlContext.uncacheTable(TABLE_NAME);
 	}
 }

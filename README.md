@@ -75,9 +75,11 @@ export PATH=$PATH:$SPARK_HOME/bin
 
 - Basic Spark SQL operations: `com.joseestudillo.spark.sql.SparkSQL`
 - Using JDBC with Spark SQL: `com.joseestudillo.spark.sql.JDBCSparkSQL`
-- Operations with RDDs in Spark SQL: `com.joseestudillo.spark.sql.RDDSparkSQL`
-- Loading Saving data in SparkSQL: `com.joseestudillo.spark.sql.LoadSaveSparkSQL`
+- Creating DataFrames from RDDs in Spark SQL: `com.joseestudillo.spark.sql.DataFrameSparkSQL`
+- Loading Saving data in SparkSQL: `com.joseestudillo.spark.sql.StorageSparkSQL`
 - Hive integration in SparkSQL: `com.joseestudillo.spark.sql.HiveSparkSQL`
+- Creating and using UDF in Spark: `com.joseestudillo.spark.sql.UDFSparkSQL`
+- Memory management for DataFrames and tables in Spark: `com.joseestudillo.spark.sql.MemoryManagementSparkSQL`
 
 # Spark Streaming
 

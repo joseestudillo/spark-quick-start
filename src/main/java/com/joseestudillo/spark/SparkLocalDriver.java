@@ -18,15 +18,15 @@ import com.joseestudillo.spark.utils.SparkUtils;
 public class SparkLocalDriver {
 
 	private static final Logger log = LogManager.getLogger(SparkLocalDriver.class);
-	private static final String SPARK_UI_PORT = "4040";
 
 	public static void main(String[] args) throws InterruptedException {
-		log.info(String.format("Starting %s", SparkTextSearch.class.getSimpleName()));
-		SparkConf conf = SparkUtils.getLocalConfig(SparkTextSearch.class.getSimpleName());
-		log.info(String.format("access to the web interface at localhost:%", SPARK_UI_PORT));
+		String appName = SparkTextSearch.class.getSimpleName();
+		log.info(String.format("Starting %s", appName));
+		SparkConf conf = SparkUtils.getLocalConfig(appName);
+		log.info(String.format("access to the web interface at localhost:%s", SparkUtils.SPARK_UI_PORT));
 		JavaSparkContext sparkContext = new JavaSparkContext(conf);
-		SparkUtils.listProperties(conf, new PrintWriter(System.out));
+		SparkUtils.listConfigurationProperties(conf, new PrintWriter(System.out));
 		Thread.sleep(60000);// time to be able to check the UI
-		log.info(String.format("Done %s", SparkTextSearch.class.getSimpleName()));
+		log.info(String.format("Done %s", appName));
 	}
 }

@@ -21,6 +21,10 @@ import com.joseestudillo.spark.utils.SparkUtils;
  * 
  * Accumulator examples
  * 
+ * Spark automatically deals with failed or slow machines by re-executing failed or slow tasks. This means that the same transformation may run multiple times
+ * (caching, being part of the DAG in another RDD, ...) on the same data depending on what happens on the cluster. Because of this, the ideal place to put
+ * accumulators is in actions as the accumulator will only be updated for successful tasks.
+ * 
  * @author Jose Estudillo
  *
  */
@@ -50,7 +54,7 @@ public class Accumulators {
 
 	}
 
-	//to accumulate data where the resulting type is not the same as the elements added AccumulableParam<Output, Input>
+	//to accumulate data where the resulting type is not the same as the elements added: AccumulableParam<Output, Input>
 	@SuppressWarnings("serial")
 	private static class BigDecimalAccumulable implements AccumulableParam<List<String>, BigDecimal> {
 		//TODO concurrency issues?
@@ -76,37 +80,31 @@ public class Accumulators {
 
 	public static void main(String[] args) {
 		SparkConf conf = SparkUtils.getLocalConfig(DoubleRDDs.class.getSimpleName());
-		log.info("access to the web interface at localhost:4040");
-		JavaSparkContext spark = new JavaSparkContext(conf);
-
-		//Spark automatically deals with failed or slow machines by re-executing failed or slow tasks.
-		//The net result is therefore that the same function may run multiple times on the same data depending on what happens on the cluster.
-
-		//the ideal place to put accumulators is in actions as the accumulator will only be updated for succesful tasks
-		//in transformations this is not guarantee as they can be run many times (caching, being part of the DAG in another RDD, ...)
+		log.info(String.format("access to the web interface at localhost: %s", SparkUtils.SPARK_UI_PORT));
+		JavaSparkContext sparkContext = new JavaSparkContext(conf);
 
 		List<BigDecimal> bigDecimalList = Arrays.asList(new BigDecimal(0), new BigDecimal(1), new BigDecimal(2));
 		List<Integer> intList = bigDecimalList.stream().map(x -> x.intValue()).collect(Collectors.toList());
 
-		// #Predefined acumulator
-		Accumulator<Integer> integerAccumulator = spark.intAccumulator(0);
+		// #Predefined acumulator that adds Integers
+		Accumulator<Integer> integerAccumulator = sparkContext.intAccumulator(0);
 		integerAccumulator.value();
-		spark.parallelize(intList).foreach(x -> integerAccumulator.add(x));
-		log.info(String.format("%s applied to %s -> %s", Accumulator.class.getName(), intList, integerAccumulator.value()));
+		sparkContext.parallelize(intList).foreach(x -> integerAccumulator.add(x));
+		log.info(String.format("%s applied (Integer +) to: %s -> %s", Accumulator.class.getName(), intList, integerAccumulator.value()));
 
-		// #Custom accumulator
-		Accumulator<BigDecimal> bigDecimalAccumulator = spark.accumulator(new BigDecimal(0), new BigDecimalAccumulator());
-		spark.parallelize(bigDecimalList).foreach(x -> bigDecimalAccumulator.add(x));
-		log.info(String.format("%s applied to %s -> %s", BigDecimalAccumulator.class.getName(), bigDecimalList, bigDecimalAccumulator.value()));
+		// #Custom accumulator that adds BigDecimals 
+		Accumulator<BigDecimal> bigDecimalAccumulator = sparkContext.accumulator(new BigDecimal(0), new BigDecimalAccumulator());
+		sparkContext.parallelize(bigDecimalList).foreach(x -> bigDecimalAccumulator.add(x));
+		log.info(String.format("%s applied (BigDecimal +) to: %s -> %s", BigDecimalAccumulator.class.getName(), bigDecimalList, bigDecimalAccumulator.value()));
 
-		// #Custom accumulable
-		Accumulable<List<String>, BigDecimal> bigDecimalAccumulable = spark.accumulable(new ArrayList<String>(), new BigDecimalAccumulable());
-		spark.parallelize(bigDecimalList).foreach(x -> bigDecimalAccumulable.add(x));
-		log.info(String.format("%s applied to %s -> %s", BigDecimalAccumulable.class.getName(), bigDecimalList, bigDecimalAccumulable.value()));
+		// #Custom accumulable that adds the elements in a list
+		Accumulable<List<String>, BigDecimal> bigDecimalAccumulable = sparkContext.accumulable(new ArrayList<String>(), new BigDecimalAccumulable());
+		sparkContext.parallelize(bigDecimalList).foreach(x -> bigDecimalAccumulable.add(x));
+		log.info(String.format("%s applied (List<String> add) to: %s -> %s", BigDecimalAccumulable.class.getName(), bigDecimalList, bigDecimalAccumulable
+				.value()));
 
 		//TODO improve when it can be run in a cluster
 
-		spark.close();
-
+		sparkContext.close();
 	}
 }

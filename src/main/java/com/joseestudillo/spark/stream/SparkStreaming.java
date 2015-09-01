@@ -32,20 +32,19 @@ public class SparkStreaming {
 
 	private static final Logger log = LogManager.getLogger(SparkStreaming.class);
 
-	private static final int baseDuration = 2;
+	private static final int BASE_DURATION = 2;
 
-	private static final Duration batchDuration = Durations.seconds(baseDuration);
+	private static final Duration BATCH_DURATION = Durations.seconds(BASE_DURATION);
 	// window is the amount of time to check
-	private static final Duration windowDuration = Durations.seconds(baseDuration * 3);
+	private static final Duration WINDOW_DURATION = Durations.seconds(BASE_DURATION * 3);
 	//the slide defines how often the results are computed
-	private static final Duration slideDuration = Durations.seconds(baseDuration * 1);
+	private static final Duration SLIDE_DURATION = Durations.seconds(BASE_DURATION * 1);
 
 	public static void main(String[] args) {
 		SparkConf conf = SparkUtils.getLocalConfig(SparkTextSearch.class.getSimpleName());
 		log.info("access to the web interface at localhost:4040");
 
-		JavaStreamingContext jssc = new JavaStreamingContext(conf, batchDuration);
-		//NumberGeneratorServer.generateServer();
+		JavaStreamingContext jssc = new JavaStreamingContext(conf, BATCH_DURATION);
 		JavaDStream<String> dStream = jssc.socketTextStream("localhost", 9999);
 		//spark automatically monitor the directory, but it doesn't monitor modified files.
 		//JavaDStream<String> dStream = jssc.textFileStream("/tmp/logs");
@@ -77,10 +76,10 @@ public class SparkStreaming {
 
 	private static void logWindowingInfo() {
 		log.info(String.format("batchSize %s, windowSize: %s slideSize: %s, #Slides: %s",
-				batchDuration,
-				windowDuration,
-				slideDuration,
-				windowDuration.milliseconds() / slideDuration.milliseconds()));
+				BATCH_DURATION,
+				WINDOW_DURATION,
+				SLIDE_DURATION,
+				WINDOW_DURATION.milliseconds() / SLIDE_DURATION.milliseconds()));
 	}
 
 	/**
@@ -96,7 +95,7 @@ public class SparkStreaming {
 	private static void window(JavaPairDStream<String, Integer> wordCounts) {
 		log.info("window:");
 		logWindowingInfo();
-		JavaPairDStream<String, Integer> windowedDStream = wordCounts.window(windowDuration, slideDuration);
+		JavaPairDStream<String, Integer> windowedDStream = wordCounts.window(WINDOW_DURATION, SLIDE_DURATION);
 		windowedDStream.print();
 	}
 
@@ -137,7 +136,7 @@ public class SparkStreaming {
 			}
 		};
 		//noticed if the window size is bigger that the batch size and the slide is not specified, the slide will be the batch size 
-		JavaPairDStream<String, Integer> outputDStream = wordCounts.reduceByKeyAndWindow(reduceByKeyAndWindowFunc, windowDuration, slideDuration);
+		JavaPairDStream<String, Integer> outputDStream = wordCounts.reduceByKeyAndWindow(reduceByKeyAndWindowFunc, WINDOW_DURATION, SLIDE_DURATION);
 		outputDStream.print();
 	}
 
@@ -149,7 +148,7 @@ public class SparkStreaming {
 		log.info("countByWindow:");
 		logWindowingInfo();
 		setUpCheckpointing(jssc);
-		JavaDStream<Long> outputDStream = wordCounts.countByWindow(windowDuration, slideDuration);
+		JavaDStream<Long> outputDStream = wordCounts.countByWindow(WINDOW_DURATION, SLIDE_DURATION);
 		outputDStream.print();
 	}
 
@@ -161,7 +160,7 @@ public class SparkStreaming {
 		log.info("countByValueAndWindow:");
 		logWindowingInfo();
 		setUpCheckpointing(jssc);
-		JavaPairDStream<String, Long> outputDStream = dStream.countByValueAndWindow(windowDuration, slideDuration);
+		JavaPairDStream<String, Long> outputDStream = dStream.countByValueAndWindow(WINDOW_DURATION, SLIDE_DURATION);
 		outputDStream.print();
 	}
 
@@ -191,7 +190,7 @@ public class SparkStreaming {
 		};
 		//updateStateByKeyFunction = (l, current) -> Optional.<Integer> of(current.or(0) + l.size());
 
-		JavaPairDStream<String, Integer> windowedDStream = wordCounts.window(windowDuration, slideDuration);
+		JavaPairDStream<String, Integer> windowedDStream = wordCounts.window(WINDOW_DURATION, SLIDE_DURATION);
 
 		JavaPairDStream<String, Integer> outputDStream = windowedDStream.updateStateByKey(updateStateByKeyFunction);
 		outputDStream.print();

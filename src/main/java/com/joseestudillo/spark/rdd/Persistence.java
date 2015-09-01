@@ -27,7 +27,7 @@ public class Persistence {
 
 	public static void main(String[] args) {
 		SparkConf conf = SparkUtils.getLocalConfig(SparkTextSearch.class.getSimpleName());
-		log.info("access to the web interface at localhost:4040");
+		log.info(String.format("access to the web interface at localhost: %s", SparkUtils.SPARK_UI_PORT));
 		JavaSparkContext sparkContext = new JavaSparkContext(conf);
 
 		List<Integer> integers = Stream.iterate(0, n -> n + 1).limit(10).collect(Collectors.toList());
@@ -37,5 +37,7 @@ public class Persistence {
 		intsRdd.persist(StorageLevel.MEMORY_ONLY()); // this is similar to intsRdd.cache();
 
 		//with <code>persist</code> you get to choose how and where (mem or disk) the data is stored.
+
+		sparkContext.close();
 	}
 }
