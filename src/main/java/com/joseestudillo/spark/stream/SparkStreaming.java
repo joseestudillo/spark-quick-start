@@ -23,7 +23,7 @@ import scala.Tuple2;
 /**
  * Spark stream examples.
  * 
- * To try with a socket server use <code>nc -lk 9999</code>
+ * To try with a socket server use <code>nc -lk PORT</code>
  * 
  * @author Jose Estudillo
  *
@@ -33,6 +33,8 @@ public class SparkStreaming {
 	private static final Logger log = LogManager.getLogger(SparkStreaming.class);
 
 	private static final int BASE_DURATION = 2;
+
+	private static final int NC_PORT = 9999;
 
 	private static final Duration BATCH_DURATION = Durations.seconds(BASE_DURATION);
 	// window is the amount of time to check
@@ -45,7 +47,8 @@ public class SparkStreaming {
 		log.info("access to the web interface at localhost:4040");
 
 		JavaStreamingContext jssc = new JavaStreamingContext(conf, BATCH_DURATION);
-		JavaDStream<String> dStream = jssc.socketTextStream("localhost", 9999);
+		JavaDStream<String> dStream = jssc.socketTextStream("localhost", NC_PORT);
+
 		//spark automatically monitor the directory, but it doesn't monitor modified files.
 		//JavaDStream<String> dStream = jssc.textFileStream("/tmp/logs");
 

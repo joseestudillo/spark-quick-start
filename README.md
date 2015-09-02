@@ -6,8 +6,7 @@ Spark quick start introduction
 
 - _RDD (resilient distributed datasets)_: it represents how the information is stored in Spark. RDD are immutable, every operation always generates a new RDD. The path of operations that leads you to a result is known as _directed acyclic graph (DAG)_.
   - RDD types:
-    - Immutable
-    - <T> RDD
+    - RDD <T> 
     - Numeric RDD
     - Pairs RDD
 
