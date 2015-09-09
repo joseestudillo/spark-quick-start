@@ -6,7 +6,6 @@ import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.sql.DataFrame;
 import org.apache.spark.sql.SQLContext;
 
-import com.joseestudillo.spark.SparkTextSearch;
 import com.joseestudillo.spark.utils.SparkUtils;
 
 /**
@@ -22,7 +21,7 @@ public class MemoryManagementSparkSQL {
 	public static final String TABLE_NAME = "json_table";
 
 	public static void main(String[] args) {
-		SparkConf conf = SparkUtils.getLocalConfig(SparkTextSearch.class.getSimpleName());
+		SparkConf conf = SparkUtils.getLocalConfig(MemoryManagementSparkSQL.class.getSimpleName());
 		log.info(String.format("access to the web interface at localhost: %s", SparkUtils.SPARK_UI_PORT));
 		JavaSparkContext sparkContext = new JavaSparkContext(conf);
 

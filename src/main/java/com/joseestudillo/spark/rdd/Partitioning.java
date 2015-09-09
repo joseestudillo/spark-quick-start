@@ -6,8 +6,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.log4j.Logger;
 import org.apache.spark.Partitioner;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaPairRDD;
@@ -30,7 +29,7 @@ import scala.Tuple2;
  */
 public class Partitioning {
 
-	private static final Logger log = LogManager.getLogger(Partitioning.class);
+	private static final Logger log = Logger.getLogger(Partitioning.class);
 
 	@SuppressWarnings("serial")
 	private static class CustomPartitioner extends Partitioner {
@@ -55,10 +54,12 @@ public class Partitioning {
 		public boolean equals(Object obj) {
 			return obj instanceof CustomPartitioner && this.numPartitions() == ((CustomPartitioner) obj).numPartitions();
 		}
+
+		//TODO redefine hashCode
 	}
 
 	public static void main(String[] args) {
-		SparkConf conf = SparkUtils.getLocalConfig(DoubleRDDs.class.getSimpleName());
+		SparkConf conf = SparkUtils.getLocalConfig(Partitioning.class.getSimpleName());
 		log.info(String.format("access to the web interface at localhost: %s", SparkUtils.SPARK_UI_PORT));
 		JavaSparkContext sparkContext = new JavaSparkContext(conf);
 

@@ -3,8 +3,7 @@ package com.joseestudillo.spark.stream;
 import java.io.File;
 import java.util.List;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.log4j.Logger;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.function.Function2;
 import org.apache.spark.streaming.Duration;
@@ -15,7 +14,6 @@ import org.apache.spark.streaming.api.java.JavaStreamingContext;
 import org.apache.tools.ant.util.FileUtils;
 
 import com.google.common.base.Optional;
-import com.joseestudillo.spark.SparkTextSearch;
 import com.joseestudillo.spark.utils.SparkUtils;
 
 import scala.Tuple2;
@@ -30,7 +28,7 @@ import scala.Tuple2;
  */
 public class SparkStreaming {
 
-	private static final Logger log = LogManager.getLogger(SparkStreaming.class);
+	private static final Logger log = Logger.getLogger(SparkStreaming.class);
 
 	private static final int BASE_DURATION = 2;
 
@@ -43,7 +41,7 @@ public class SparkStreaming {
 	private static final Duration SLIDE_DURATION = Durations.seconds(BASE_DURATION * 1);
 
 	public static void main(String[] args) {
-		SparkConf conf = SparkUtils.getLocalConfig(SparkTextSearch.class.getSimpleName());
+		SparkConf conf = SparkUtils.getLocalConfig(SparkStreaming.class.getSimpleName());
 		log.info("access to the web interface at localhost:4040");
 
 		JavaStreamingContext jssc = new JavaStreamingContext(conf, BATCH_DURATION);
@@ -57,7 +55,7 @@ public class SparkStreaming {
 		JavaPairDStream<String, Integer> wordCounts = pairs.reduceByKey((a, b) -> a + b);
 
 		log.info("running....");
-
+		//wordCounts.print();
 		//window(wordCounts);
 		//reduceByKey(wordCounts);
 		//reduceByKeyAndWindow(wordCounts);

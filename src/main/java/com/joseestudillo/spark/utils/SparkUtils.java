@@ -5,7 +5,7 @@ import java.io.PrintWriter;
 import java.net.UnknownHostException;
 import java.util.Properties;
 
-import org.apache.logging.log4j.Logger;
+import org.apache.log4j.Logger;
 import org.apache.spark.Partition;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.AbstractJavaRDDLike;

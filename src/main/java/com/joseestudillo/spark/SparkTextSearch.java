@@ -3,8 +3,8 @@ package com.joseestudillo.spark;
 import java.io.File;
 import java.util.List;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+
+import org.apache.log4j.Logger;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
@@ -21,7 +21,7 @@ import com.joseestudillo.spark.utils.SparkUtils;
  */
 public class SparkTextSearch {
 
-	private static final Logger log = LogManager.getLogger(SparkTextSearch.class);
+	private static final Logger log = Logger.getLogger(SparkTextSearch.class);
 	private static final String FILE_TO_FILTER = "/text-search.txt";
 
 	public static Function<String, Boolean> containsFilter(final String searchStr) {

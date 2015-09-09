@@ -4,8 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.log4j.Logger;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.broadcast.Broadcast;
@@ -24,10 +23,10 @@ import com.joseestudillo.spark.utils.SparkUtils;
  */
 public class BroadcastVariables {
 
-	private final static Logger log = LogManager.getLogger(BroadcastVariables.class);
+	private final static Logger log = Logger.getLogger(BroadcastVariables.class);
 
 	public static void main(String[] args) {
-		SparkConf conf = SparkUtils.getLocalConfig(DoubleRDDs.class.getSimpleName());
+		SparkConf conf = SparkUtils.getLocalConfig(BroadcastVariables.class.getSimpleName());
 		log.info(String.format("access to the web interface at localhost:%s", SparkUtils.SPARK_UI_PORT));
 		JavaSparkContext sparkContext = new JavaSparkContext(conf);
 

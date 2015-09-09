@@ -1,0 +1,1 @@
+Cloudera's Hadoop configuration modified to sent jobs remotely. It has been tested againsts the Cloudera's quick start VM, assuming that the host, quickstart.cloudera, points to the VM in the host system.

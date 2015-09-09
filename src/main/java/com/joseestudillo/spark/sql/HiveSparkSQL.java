@@ -3,8 +3,7 @@ package com.joseestudillo.spark.sql;
 import java.io.File;
 import java.io.IOException;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.log4j.Logger;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.sql.Column;
@@ -12,7 +11,6 @@ import org.apache.spark.sql.DataFrame;
 import org.apache.spark.sql.SQLContext;
 import org.apache.spark.sql.hive.HiveContext;
 
-import com.joseestudillo.spark.SparkTextSearch;
 import com.joseestudillo.spark.utils.LoggerUtils;
 import com.joseestudillo.spark.utils.SparkUtils;
 
@@ -27,7 +25,7 @@ import com.joseestudillo.spark.utils.SparkUtils;
  */
 public class HiveSparkSQL {
 
-	private static final Logger log = LogManager.getLogger(HiveSparkSQL.class);
+	private static final Logger log = Logger.getLogger(HiveSparkSQL.class);
 
 	private static final String HIVE_TABLE_NAME = "hive_table";
 	private static final String JSON_TABLE_NAME = "json_table";
@@ -38,7 +36,7 @@ public class HiveSparkSQL {
 	private static final String FIELD_VALUE = "value";
 
 	public static void main(String[] args) throws IOException {
-		SparkConf conf = SparkUtils.getLocalConfig(SparkTextSearch.class.getSimpleName());
+		SparkConf conf = SparkUtils.getLocalConfig(HiveSparkSQL.class.getSimpleName());
 		log.info(String.format("access to the web interface at localhost: %s", SparkUtils.SPARK_UI_PORT));
 		JavaSparkContext sparkContext = new JavaSparkContext(conf);
 

@@ -5,8 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.log4j.Logger;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
@@ -14,7 +13,6 @@ import org.apache.spark.api.java.function.FlatMapFunction;
 import org.apache.spark.api.java.function.Function;
 import org.apache.spark.api.java.function.Function2;
 
-import com.joseestudillo.spark.SparkTextSearch;
 import com.joseestudillo.spark.utils.SparkUtils;
 
 /**
@@ -25,12 +23,12 @@ import com.joseestudillo.spark.utils.SparkUtils;
  */
 public class RddTransAndOps {
 
-	private static final Logger log = LogManager.getLogger(RddTransAndOps.class);
+	private static final Logger log = Logger.getLogger(RddTransAndOps.class);
 
 	public static String INPUT_FILE = "numbers.txt";
 
 	public static void main(String[] args) {
-		SparkConf conf = SparkUtils.getLocalConfig(SparkTextSearch.class.getSimpleName());
+		SparkConf conf = SparkUtils.getLocalConfig(RddTransAndOps.class.getSimpleName());
 		log.info(String.format("access to the web interface at localhost: %s", SparkUtils.SPARK_UI_PORT));
 		JavaSparkContext sparkContext = new JavaSparkContext(conf);
 

@@ -1,7 +1,7 @@
 package com.joseestudillo.spark.sql;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+
+import org.apache.log4j.Logger;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.sql.DataFrame;
@@ -20,7 +20,7 @@ import com.joseestudillo.spark.utils.SparkUtils;
  */
 public class UDFSparkSQL {
 
-	private static final Logger log = LogManager.getLogger(UDFSparkSQL.class);
+	private static final Logger log = Logger.getLogger(UDFSparkSQL.class);
 
 	private static final String JSON_TABLE_FILENAME = "table.json";
 
@@ -45,7 +45,7 @@ public class UDFSparkSQL {
 		jsonDataFrame.show();
 
 		log.info(String.format("Declaring the UDF: %s", UDF_NAME));
-		UDF1<?, ?> udf = (String s) -> s.length();
+		UDF1<String, Integer> udf = (String s) -> s.length();
 		sqlContext.udf().register(UDF_NAME, udf, DataTypes.IntegerType);
 
 		String query = String.format("SELECT %1$s, %2$s(%1$s) FROM %3$s", FIELD_VALUE, UDF_NAME, TABLE_NAME);

@@ -10,7 +10,6 @@ import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.storage.StorageLevel;
 
-import com.joseestudillo.spark.SparkTextSearch;
 import com.joseestudillo.spark.utils.SparkUtils;
 
 /**
@@ -26,7 +25,7 @@ public class Persistence {
 	private static final Logger log = Logger.getLogger(Persistence.class);
 
 	public static void main(String[] args) {
-		SparkConf conf = SparkUtils.getLocalConfig(SparkTextSearch.class.getSimpleName());
+		SparkConf conf = SparkUtils.getLocalConfig(Persistence.class.getSimpleName());
 		log.info(String.format("access to the web interface at localhost: %s", SparkUtils.SPARK_UI_PORT));
 		JavaSparkContext sparkContext = new JavaSparkContext(conf);
 

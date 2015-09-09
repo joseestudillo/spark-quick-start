@@ -6,8 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.log4j.Logger;
 import org.apache.spark.Accumulable;
 import org.apache.spark.AccumulableParam;
 import org.apache.spark.Accumulator;
@@ -30,7 +29,7 @@ import com.joseestudillo.spark.utils.SparkUtils;
  */
 public class Accumulators {
 
-	private static final Logger log = LogManager.getLogger(Accumulators.class);
+	private static final Logger log = Logger.getLogger(Accumulators.class);
 
 	//to accumulate an specific type
 	@SuppressWarnings("serial")
@@ -79,7 +78,7 @@ public class Accumulators {
 	}
 
 	public static void main(String[] args) {
-		SparkConf conf = SparkUtils.getLocalConfig(DoubleRDDs.class.getSimpleName());
+		SparkConf conf = SparkUtils.getLocalConfig(Accumulators.class.getSimpleName());
 		log.info(String.format("access to the web interface at localhost: %s", SparkUtils.SPARK_UI_PORT));
 		JavaSparkContext sparkContext = new JavaSparkContext(conf);
 

@@ -84,3 +84,7 @@ export PATH=$PATH:$SPARK_HOME/bin
 
 - General Spark Stream operations: `com.joseestudillo.spark.stream.SparkStreaming`
 
+# Submitting task to an Spark Cluster
+
+- The IP/Hostname used  to refer the spark cluster must the be the same in the hostname and in the cluster (it doesn't matter if they resolve to the same, they must be the same)
+

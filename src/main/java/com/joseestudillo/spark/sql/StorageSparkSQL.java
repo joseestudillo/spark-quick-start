@@ -5,8 +5,8 @@ import java.io.IOException;
 import java.util.Arrays;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+
+import org.apache.log4j.Logger;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.sql.DataFrame;
@@ -23,7 +23,7 @@ import com.joseestudillo.spark.utils.SparkUtils;
  */
 public class StorageSparkSQL {
 
-	private static final Logger log = LogManager.getLogger(StorageSparkSQL.class);
+	private static final Logger log = Logger.getLogger(StorageSparkSQL.class);
 
 	private static final String TABLE_NAME = "json_table";
 	private static final String FIELD_VALUE = "value";
