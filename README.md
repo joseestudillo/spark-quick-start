@@ -86,5 +86,25 @@ export PATH=$PATH:$SPARK_HOME/bin
 
 # Submitting task to an Spark Cluster
 
-- The IP/Hostname used  to refer the spark cluster must the be the same in the hostname and in the cluster (it doesn't matter if they resolve to the same, they must be the same)
+- The IP/Hostname used  to refer the spark cluster must the be the same in the hostname and in the cluster (it doesn't matter if they resolve to the same, they must be the same). To avoid this kind of problems declare explicitly the host ip and the hostname in the `/etc/hosts` file.
 
+- It is also required to run the same version of Spark as in the cluster, the submit command is not guaranteed to work with different versions.
+
+- _Deploy modes:_ 
+  - _Client mode_: when the computer that contains the app wants to run it on an spark cluster. 
+  - _Cluster mode_: the same as above, but the host computer is park of the cluster itself, so spark expect to access to the files locally. 
+
+## Submitting Spark jobs into a Cloudera Quick Start VM
+
+At the time of this writing I'm using the version 5.4 and the only defined worker fails because it can't connect to Akka. The easiest way to solve this is to configure CentOS to use an static IP and then configure that IP in the `/etc/hosts` file. Because of the cloudera vm is configured to generate `/etc/hosts` on startup you will need to do the following:
+
+- In the file `/etc/init.d/cloudera-quickstart-init` comment out the line that executes the command `cloudera-quickstart-ip`
+- Then edit the `/etc/hosts` file the following:
+```bash
+127.0.0.1	quickstart	localhost	localhost.domain
+YOUR_STATIC_IP     quickstart.cloudera
+```
+
+In this case I'm using `quickstart.cloudera` as a main hostname, so I will also configure it in the host machine to be able to submit jobs remotely to the VM.
+
+After this change you can check that the worker now can properly register to Akka in the log file `/var/log/spark/spark-worker.out`.

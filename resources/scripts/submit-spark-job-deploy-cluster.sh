@@ -1,3 +1,5 @@
+#this must be run from a node that is actually running spark itself 
+
 source ./vars.sh
 # if the hostname is not the same as the one that appears in the web interface it doesn't work
 MASTER=$MASTER_SPARK
