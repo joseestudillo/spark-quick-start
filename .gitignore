@@ -5,4 +5,15 @@ bin/
 .settings/
 .cache-main
 .cache-tests
+/build/
+
+
+# sbt
+
+project/target/
+project/project/
+
+# gradle
+
+.gradle/
 

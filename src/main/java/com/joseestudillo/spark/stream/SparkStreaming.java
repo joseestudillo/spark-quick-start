@@ -1,8 +1,10 @@
 package com.joseestudillo.spark.stream;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.function.Function2;
@@ -11,7 +13,6 @@ import org.apache.spark.streaming.Durations;
 import org.apache.spark.streaming.api.java.JavaDStream;
 import org.apache.spark.streaming.api.java.JavaPairDStream;
 import org.apache.spark.streaming.api.java.JavaStreamingContext;
-import org.apache.tools.ant.util.FileUtils;
 
 import com.google.common.base.Optional;
 import com.joseestudillo.spark.utils.SparkUtils;
@@ -40,7 +41,7 @@ public class SparkStreaming {
 	//the slide defines how often the results are computed
 	private static final Duration SLIDE_DURATION = Durations.seconds(BASE_DURATION * 1);
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 		SparkConf conf = SparkUtils.getLocalConfig(SparkStreaming.class.getSimpleName());
 		log.info("access to the web interface at localhost:4040");
 
@@ -68,9 +69,9 @@ public class SparkStreaming {
 		log.info("done");
 	}
 
-	private static void setUpCheckpointing(JavaStreamingContext jssc) {
+	private static void setUpCheckpointing(JavaStreamingContext jssc) throws IOException {
 		File checkpointDir = new File("/tmp/spark");
-		FileUtils.delete(checkpointDir);
+		FileUtils.deleteDirectory(checkpointDir);
 		checkpointDir.mkdirs();
 		jssc.checkpoint(checkpointDir.getPath());
 	}
@@ -144,8 +145,9 @@ public class SparkStreaming {
 	/**
 	 * 
 	 * @param wordCounts
+	 * @throws IOException
 	 */
-	private static void countByWindow(JavaStreamingContext jssc, JavaPairDStream<String, Integer> wordCounts) {
+	private static void countByWindow(JavaStreamingContext jssc, JavaPairDStream<String, Integer> wordCounts) throws IOException {
 		log.info("countByWindow:");
 		logWindowingInfo();
 		setUpCheckpointing(jssc);
@@ -156,8 +158,9 @@ public class SparkStreaming {
 	/**
 	 * 
 	 * @param dStream
+	 * @throws IOException
 	 */
-	private static void countByValueAndWindow(JavaStreamingContext jssc, JavaDStream<String> dStream) {
+	private static void countByValueAndWindow(JavaStreamingContext jssc, JavaDStream<String> dStream) throws IOException {
 		log.info("countByValueAndWindow:");
 		logWindowingInfo();
 		setUpCheckpointing(jssc);
@@ -169,8 +172,9 @@ public class SparkStreaming {
 	 * 
 	 * @param jssc
 	 * @param wordCounts
+	 * @throws IOException
 	 */
-	private static void updateStateByKey(JavaStreamingContext jssc, JavaPairDStream<String, Integer> wordCounts) {
+	private static void updateStateByKey(JavaStreamingContext jssc, JavaPairDStream<String, Integer> wordCounts) throws IOException {
 		log.info("updateStateByKey:");
 		logWindowingInfo();
 		setUpCheckpointing(jssc);

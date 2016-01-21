@@ -1,0 +1,33 @@
+apply plugin: 'scala'
+
+// setting the repo
+repositories {
+  mavenCentral()
+}
+
+// forzing to use the compiler based in Zinc instead of the default based on ant
+tasks.withType(ScalaCompile) {
+    scalaCompileOptions.useAnt = false
+}
+
+
+// declaring the dependencies
+
+dependencies {
+  compile 'org.scala-lang:scala-library:2.11.7'
+  compile 'com.typesafe.scala-logging:scala-logging_2.11:3.1.0'
+  compile 'org.slf4j:slf4j-log4j12:1.7.12'
+  compile 'com.typesafe.akka:akka-actor_2.11:2.4.1'
+  compile 'log4j:log4j:1.2.16'
+  compile 'org.apache.spark:spark-core_2.11:1.6.0'
+  compile 'org.apache.spark:spark-sql_2.11:1.6.0'
+  compile 'org.apache.spark:spark-hive_2.11:1.6.0'
+  compile 'org.apache.spark:spark-mllib_2.11:1.6.0'
+  compile 'org.apache.spark:spark-repl_2.11:1.6.0'
+  compile 'org.apache.derby:derby:10.11.1.1'
+  compile 'org.apache.commons:commons-lang3:3.4'
+  
+  testCompile 'junit:junit:4.8.1:test'
+  testCompile  'org.scalatest:scalatest_2.11:2.2.6'
+  testCompile 'org.scalactic:scalactic_2.11:2.2.6'
+}
