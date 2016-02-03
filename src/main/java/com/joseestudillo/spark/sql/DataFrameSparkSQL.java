@@ -18,6 +18,7 @@ import org.apache.spark.sql.types.DataTypes;
 import org.apache.spark.sql.types.StructField;
 import org.apache.spark.sql.types.StructType;
 
+import com.joseestudillo.spark.sql.DataFrameSparkSQL.DataBean;
 import com.joseestudillo.spark.utils.SparkUtils;
 
 /**

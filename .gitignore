@@ -6,7 +6,7 @@ bin/
 .cache-main
 .cache-tests
 /build/
-
+.DS_Store
 
 # sbt
 

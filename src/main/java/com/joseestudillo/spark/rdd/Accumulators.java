@@ -85,7 +85,7 @@ public class Accumulators {
 		List<BigDecimal> bigDecimalList = Arrays.asList(new BigDecimal(0), new BigDecimal(1), new BigDecimal(2));
 		List<Integer> intList = bigDecimalList.stream().map(x -> x.intValue()).collect(Collectors.toList());
 
-		// #Predefined acumulator that adds Integers
+		// #Predefined accumulator that adds Integers
 		Accumulator<Integer> integerAccumulator = sparkContext.intAccumulator(0);
 		integerAccumulator.value();
 		sparkContext.parallelize(intList).foreach(x -> integerAccumulator.add(x));

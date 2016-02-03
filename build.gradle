@@ -2,6 +2,16 @@ group 'com.joseestudillo'
 version '0.0.1-SNAPSHOT'
 
 apply plugin: 'scala'
+apply plugin: 'eclipse'
+
+sourceSets {
+    main {
+        java {
+			sourceCompatibility = 1.8
+			targetCompatibility = 1.8
+		}
+	}
+}
 
 // setting the repo
 repositories {
@@ -30,7 +40,7 @@ dependencies {
   compile 'org.apache.derby:derby:10.11.1.1'
   compile 'org.apache.commons:commons-lang3:3.4'
   
-  testCompile 'junit:junit:4.8.1:test'
+  testCompile 'junit:junit:4.8.1'
   testCompile  'org.scalatest:scalatest_2.11:2.2.6'
   testCompile 'org.scalactic:scalactic_2.11:2.2.6'
 }
