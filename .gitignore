@@ -6,14 +6,20 @@ bin/
 .cache-main
 .cache-tests
 /build/
+
+# OSX
 .DS_Store
 
 # sbt
-
 project/target/
 project/project/
 
 # gradle
-
 .gradle/
 
+# derby
+derby.log
+metastore_db/
+
+# spark	
+spark_database/

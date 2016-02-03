@@ -45,5 +45,7 @@ public class MemoryManagementSparkSQL {
 
 		log.info("Uncaching Table");
 		sqlContext.uncacheTable(TABLE_NAME);
+
+		sparkContext.stop();
 	}
 }

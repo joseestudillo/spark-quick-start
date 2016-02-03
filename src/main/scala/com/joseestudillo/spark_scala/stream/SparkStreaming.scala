@@ -1,4 +1,4 @@
-package com.joseestudillo.spark_scala.rdd
+package com.joseestudillo.spark_scala.stream
 
 import org.apache.spark.SparkConf
 import org.apache.spark.SparkContext
@@ -14,11 +14,8 @@ object SparkStreaming {
     val appName = getClass.getName
 
     val conf = new SparkConf().setAppName(appName).setMaster(host)
-    val sc = new SparkContext(conf)
+    val sparkContext = new SparkContext(conf)
 
-
-    //
-    
-    sc.stop();
+    sparkContext.stop();
   }
 }

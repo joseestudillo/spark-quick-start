@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.util.Arrays;
 
 import org.apache.commons.io.FileUtils;
-
 import org.apache.log4j.Logger;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaSparkContext;
@@ -74,5 +73,7 @@ public class StorageSparkSQL {
 		DataFrame loadedParquetFileDataFrame = sqlContext.read().parquet(schemaParquetFile.getPath());
 		log.info("Loaded DataFrame:");
 		loadedParquetFileDataFrame.show();
+
+		sparkContext.close();
 	}
 }

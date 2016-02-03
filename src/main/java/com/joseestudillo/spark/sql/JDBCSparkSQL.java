@@ -43,7 +43,7 @@ public class JDBCSparkSQL {
 		DerbyManager.loadDriver();
 		Connection conn = DerbyManager.getDerbyConnection(DATABASE_NAME);
 
-		//create a table to load later on in Spark
+		//create a table to load later in Spark
 		DerbyManager.createDummyTable(conn);
 
 		//show the content of the just created table
