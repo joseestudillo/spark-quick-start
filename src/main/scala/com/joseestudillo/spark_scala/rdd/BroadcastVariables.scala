@@ -9,7 +9,8 @@ import org.apache.spark.broadcast.Broadcast
 import com.joseestudillo.spark_scala.utils.SparkUtils
 
 object BroadcastVariables {
-  val log = Logger(LoggerFactory.getLogger(getClass.getName));
+  
+  val log = Logger(LoggerFactory.getLogger(getClass.getName))
 
   def main(args: Array[String]) {
     val host = if (args.length > 0) args(0) else SparkUtils.LOCAL_MASTER_ID
@@ -19,12 +20,13 @@ object BroadcastVariables {
     val sc = new SparkContext(conf)
 
     val integers = List.empty ++ (1 to 10)
+    
     //creation
-    val broadcastedIntList: Broadcast[List[Int]] = sc.broadcast(integers);
+    val broadcastedIntList: Broadcast[List[Int]] = sc.broadcast(integers)
 
     //access
-    broadcastedIntList.value;
+    broadcastedIntList.value
 
-    sc.stop();
+    sc.stop()
   }
 }

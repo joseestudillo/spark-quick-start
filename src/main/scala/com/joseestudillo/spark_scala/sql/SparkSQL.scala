@@ -15,11 +15,13 @@ import org.apache.spark.sql.types.StructField
 import org.apache.spark.sql.types.DataTypes
 
 object SparkSQL {
-  val log = Logger(LoggerFactory.getLogger(getClass.getName));
-  val JSON_TABLE_FILENAME = "table.json";
-	val TABLE_NAME = "json_table";
-	val FIELD_VALUE = "value";
-	val FIELD_ID = "id";
+  
+  val JSON_TABLE_FILENAME = "table.json"
+	val TABLE_NAME = "json_table"
+	val FIELD_VALUE = "value"
+	val FIELD_ID = "id"
+  
+  val log = Logger(LoggerFactory.getLogger(getClass.getName))
   
   def main(args: Array[String]) {
     val host = if (args.length > 0) args(0) else SparkUtils.LOCAL_MASTER_ID
@@ -28,6 +30,7 @@ object SparkSQL {
     val conf = new SparkConf().setAppName(appName).setMaster(host)
     val sparkContext = new SparkContext(conf)
     val sparkSQLContext = new SQLContext(sparkContext)
+    
     //import the implicits to allow converting collections and RDDs into dataframes.
     import sparkSQLContext.implicits._
     
@@ -38,39 +41,38 @@ object SparkSQL {
     val csv = tuples.map(func)
     
     val jsonFilePath = SparkUtils.getClasspathFileURI(JSON_TABLE_FILENAME)
-    log.info(s"loading the file ${jsonFilePath}")
+    log.info(s"loading the file $jsonFilePath")
     val jsonDataFrame = sparkSQLContext.read.json(jsonFilePath)
     jsonDataFrame.registerTempTable(TABLE_NAME)
 
-    log.info("Show table schema info");
-    jsonDataFrame.printSchema();
+    log.info("Show table schema info")
+    jsonDataFrame.printSchema()
     
-    log.info("Show table content");
+    log.info("Show table content")
     jsonDataFrame.show()
     
-		log.info("Use as resultSet");
-		val rows = jsonDataFrame.select(FIELD_VALUE).collectAsList();
+		log.info("Use as resultSet")
+		val rows = jsonDataFrame.select(FIELD_VALUE).collectAsList()
 		for (row <- rows.toArray()) {
-			log.info(String.valueOf(row));
+			log.info(String.valueOf(row))
 		}
 
-		log.info(s"select ${FIELD_VALUE}, ${FIELD_ID} +1");
-		jsonDataFrame.select(jsonDataFrame.col(FIELD_VALUE), jsonDataFrame.col(FIELD_ID).plus(1)).show();
+		log.info(s"select $FIELD_VALUE, $FIELD_ID +1")
+		jsonDataFrame.select(jsonDataFrame.col(FIELD_VALUE), jsonDataFrame.col(FIELD_ID).plus(1)).show()
 
-		log.info(s"filter by ${FIELD_ID} > 0");
-		jsonDataFrame.filter(jsonDataFrame.col(FIELD_ID).gt(0)).show();
+		log.info(s"filter by $FIELD_ID > 0")
+		jsonDataFrame.filter(jsonDataFrame.col(FIELD_ID).gt(0)).show()
 
-		log.info(s"group by ${FIELD_VALUE}");
-		jsonDataFrame.groupBy(FIELD_VALUE).count().show();
+		log.info(s"group by $FIELD_VALUE")
+		jsonDataFrame.groupBy(FIELD_VALUE).count().show()
 
-		log.info(s"group by ${FIELD_ID}");
-		jsonDataFrame.groupBy(FIELD_ID).count().show();
+		log.info(s"group by $FIELD_ID")
+		jsonDataFrame.groupBy(FIELD_ID).count().show()
 
-		val query = s"SELECT * FROM ${TABLE_NAME}";
-		val sqlDataFrame = jsonDataFrame.sqlContext.sql(query);
-		log.info(s"Using query: ${query}");
-		sqlDataFrame.show();
-    
+		val query = s"SELECT * FROM $TABLE_NAME"
+		val sqlDataFrame = jsonDataFrame.sqlContext.sql(query)
+		log.info(s"Using query: $query")
+		sqlDataFrame.show()
 
 		println(csv)
 		

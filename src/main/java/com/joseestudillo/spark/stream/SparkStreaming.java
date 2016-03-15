@@ -21,11 +21,10 @@ import scala.Tuple2;
 
 /**
  * Spark stream examples.
- * 
+ * <p>
  * To try with a socket server use <code>nc -lk PORT</code>
- * 
- * @author Jose Estudillo
  *
+ * @author Jose Estudillo
  */
 public class SparkStreaming {
 
@@ -91,7 +90,7 @@ public class SparkStreaming {
 	 * <p>
 	 * - every time 'slideSize' elapses, an slide gets out of the window and a new one gets in
 	 * <p>
-	 * 
+	 *
 	 * @param wordCounts
 	 */
 	private static void window(JavaPairDStream<String, Integer> wordCounts) {
@@ -103,7 +102,7 @@ public class SparkStreaming {
 
 	/**
 	 * - Reduces the value in the whole Window (no slides)
-	 * 
+	 *
 	 * @param wordCounts
 	 */
 	private static void reduceByKey(JavaPairDStream<String, Integer> wordCounts) {
@@ -123,7 +122,7 @@ public class SparkStreaming {
 
 	/**
 	 * - goes through all the windows every time there is a new window in (an another out)
-	 * 
+	 *
 	 * @param wordCounts
 	 */
 	private static void reduceByKeyAndWindow(JavaPairDStream<String, Integer> wordCounts) {
@@ -143,7 +142,6 @@ public class SparkStreaming {
 	}
 
 	/**
-	 * 
 	 * @param wordCounts
 	 * @throws IOException
 	 */
@@ -156,7 +154,6 @@ public class SparkStreaming {
 	}
 
 	/**
-	 * 
 	 * @param dStream
 	 * @throws IOException
 	 */
@@ -169,7 +166,6 @@ public class SparkStreaming {
 	}
 
 	/**
-	 * 
 	 * @param jssc
 	 * @param wordCounts
 	 * @throws IOException

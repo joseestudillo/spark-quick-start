@@ -9,10 +9,12 @@ import com.joseestudillo.spark.utils.DerbyManager
 import java.sql.Connection
 import org.apache.spark.sql.SQLContext
 import org.apache.spark.sql.DataFrame
+import scala.collection.mutable
 import scala.collection.mutable.HashMap
 import org.apache.spark.sql.DataFrame
 
 object JDBCSparkSQL {
+
   val log = Logger(LoggerFactory.getLogger(getClass.getName))
 
   val CREATE_TMP_TABLE_QUERY = "CREATE TEMPORARY TABLE jdbc_table USING org.apache.spark.sql.jdbc OPTIONS ( url \"%s\", dbtable \"%s\")"
@@ -31,7 +33,6 @@ object JDBCSparkSQL {
     val sparkContext = new SparkContext(conf)
     val sqlContext = new SQLContext(sparkContext)
 
-
     //derby database instantiation and table creation
     val connStr = DerbyManager.getConnectionString(DATABASE_NAME)
 		DerbyManager.loadDriver()
@@ -41,10 +42,10 @@ object JDBCSparkSQL {
 		//show the content of the just created table
 		log.info(String.format("Content in the table '%s':", TABLE_NAME))
 
-		var options = HashMap.empty[String, String]
+    val options = mutable.HashMap.empty[String, String]
 		options.put(SPARK_JDBC_OPT_URL, connStr)
 		options.put(SPARK_JDBC_OPT_DBTABLE, TABLE_NAME)
-		log.info(String.format("Loading table %s from %s with the options: %s", TABLE_NAME, connStr, options))
+		log.info(s"Loading table $TABLE_NAME from $connStr with the options: $options")
 		val jdbcDataFrame = sqlContext.read.format(SPARK_JDBC).options(options.toMap).load()
 		
 		jdbcDataFrame.show()

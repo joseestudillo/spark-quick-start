@@ -16,9 +16,8 @@ object Partitioning {
     val conf = new SparkConf().setAppName(appName).setMaster(host)
     val sc = new SparkContext(conf)
 
-
-    //
+    //TODO
     
-    sc.stop();
+    sc.stop()
   }
 }

@@ -10,6 +10,7 @@ import java.io.File
 import org.apache.commons.io.FileUtils
 
 object StorageSparkSQL {
+
   val log = Logger(LoggerFactory.getLogger(getClass.getName))
 
   val TABLE_NAME = "json_table"
@@ -30,9 +31,8 @@ object StorageSparkSQL {
     val sparkContext = new SparkContext(conf)
     val sqlContext = new SQLContext(sparkContext)
 
-
     val jsonFilePath = SparkUtils.getClasspathFileURI(JSON_TABLE_FILENAME)
-		log.info(String.format("Loading data from %s", jsonFilePath))
+		log.info(s"Loading data from $jsonFilePath")
 		val jsonDataFrame = sqlContext.read.json(jsonFilePath)
 		jsonDataFrame.registerTempTable(TABLE_NAME) //this gives a name to the table making it accessible
 
@@ -45,22 +45,22 @@ object StorageSparkSQL {
 		}
 
 		//Saving the result of a query
-		log.info(String.format("Storing DataFrame query into %s using parquet", queryParquetFile))
-		jsonDataFrame.select(FIELD_VALUE).write.format(SPARK_PARQUET_FORMAT).save(queryParquetFile.getPath())
+		log.info(s"Storing DataFrame query into $queryParquetFile using parquet")
+		jsonDataFrame.select(FIELD_VALUE).write.format(SPARK_PARQUET_FORMAT).save(queryParquetFile.getPath)
 
 		//Loading the result of a query from a parquet file
-		log.info(String.format("Loading data from parquet file: %s", queryParquetFile))
-		val loadedParquetFileQueryDataFrame = sqlContext.read.parquet(queryParquetFile.getPath())
+		log.info(s"Loading data from parquet file: $queryParquetFile")
+		val loadedParquetFileQueryDataFrame = sqlContext.read.parquet(queryParquetFile.getPath)
 		log.info("Loaded DataFrame:")
 		loadedParquetFileQueryDataFrame.show()
 
 		//Saving a whole dataframe
-		log.info(String.format("Storing a complete DataFrame into %s using parquet", schemaParquetFile))
-		jsonDataFrame.write.parquet(schemaParquetFile.getPath())
+		log.info(s"Storing a complete DataFrame into $schemaParquetFile using parquet")
+		jsonDataFrame.write.parquet(schemaParquetFile.getPath)
 
 		//Loading a whole dataframe from a parquet file
-		log.info(String.format("Loading %s into a DataFrame", schemaParquetFile))
-		val loadedParquetFileDataFrame = sqlContext.read.parquet(schemaParquetFile.getPath())
+		log.info(s"Loading $schemaParquetFile into a DataFrame")
+		val loadedParquetFileDataFrame = sqlContext.read.parquet(schemaParquetFile.getPath)
 		log.info("Loaded DataFrame:")
 		loadedParquetFileDataFrame.show()
     

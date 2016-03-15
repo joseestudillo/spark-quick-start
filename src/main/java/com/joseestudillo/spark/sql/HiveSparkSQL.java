@@ -17,9 +17,7 @@ import com.joseestudillo.spark.utils.SparkUtils;
 /**
  * Example of how to use Hive from Spark
  * 
- * Problems:
- * 
- * - I only have been able to load Hive Configuration placing hive-site.xml in the classpath.
+ * TODO: I only have been able to load Hive Configuration placing hive-site.xml in the classpath.
  * 
  * @author Jose Estudillo
  */

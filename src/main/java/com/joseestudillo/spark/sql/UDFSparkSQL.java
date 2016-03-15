@@ -45,7 +45,7 @@ public class UDFSparkSQL {
 		jsonDataFrame.show();
 
 		log.info(String.format("Declaring the UDF: %s", UDF_NAME));
-		UDF1<String, Integer> udf = (String s) -> s.length();
+		UDF1<String, Integer> udf = String::length;
 		sqlContext.udf().register(UDF_NAME, udf, DataTypes.IntegerType);
 
 		String query = String.format("SELECT %1$s, %2$s(%1$s) FROM %3$s", FIELD_VALUE, UDF_NAME, TABLE_NAME);

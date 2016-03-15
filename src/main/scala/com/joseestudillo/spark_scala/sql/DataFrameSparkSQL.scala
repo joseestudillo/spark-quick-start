@@ -23,7 +23,7 @@ object DataFrameSparkSQL {
   def main(args: Array[String]) {
     
     class DataBean(var name: String,var id: Long) extends Serializable {
-      override def toString = s"DataBean(${name}, ${id})"
+      override def toString = s"DataBean($name, $id)"
       def setName(s: String) { name = s }
       def setId(l: Long) { id = l }
       def getName = name
@@ -53,7 +53,7 @@ object DataFrameSparkSQL {
 		// Create a DataFrame from the DataBeans RDD
 		val dataBeanDataFrame = sparkSQLContext.createDataFrame(dataBeanRDD, classOf[DataBean])
 		dataBeanDataFrame.registerTempTable(TABLE_NAME)
-		log.info(s"Table '${TABLE_NAME}' generated from ${dataBeanRDD.collect().mkString(", ")}:")
+		log.info(s"Table '$TABLE_NAME' generated from ${dataBeanRDD.collect().mkString(", ")}:")
 		dataBeanDataFrame.show()
 
 		// Get all the rows in the dataFrame
@@ -67,12 +67,12 @@ object DataFrameSparkSQL {
 
 		// # Read data into a dataframe using plain data and defining the schema
 		// define the column names/types
-		var columnTypes: Array[StructField] = new Array[StructField](2)
+		val columnTypes: Array[StructField] = new Array[StructField](2)
 		columnTypes.update(0, DataTypes.createStructField("name", DataTypes.StringType, true))
 		columnTypes.update(1, DataTypes.createStructField("id", DataTypes.LongType, true))
 		val tableSchema: StructType = DataTypes.createStructType(columnTypes)
 
-		log.info(s"Table Squema: ${tableSchema}")
+		log.info(s"Table Squema: $tableSchema")
 
 		// Create rows (Row) from plain text
 		val fromStringToRow = (inputText: String) => {
@@ -85,7 +85,7 @@ object DataFrameSparkSQL {
 		// Apply the schema to the RDD and load the Rows from the RDD.
 		val definedSchemaDataFrame: DataFrame = sparkSQLContext.createDataFrame(rowsFromDataRDD, tableSchema)
 		definedSchemaDataFrame.registerTempTable(TABLE_NAME)
-		log.info(s"Table '${TABLE_NAME}' generated from ${rowsFromDataRDD.collect().mkString(", ")}:")
+		log.info(s"Table '$TABLE_NAME' generated from ${rowsFromDataRDD.collect().mkString(", ")}:")
 		definedSchemaDataFrame.show()
     
     sparkContext.stop()

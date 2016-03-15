@@ -123,6 +123,5 @@ public class DataFrameSparkSQL {
 		definedSchemaDataFrame.registerTempTable(TABLE_NAME);
 		log.info(String.format("Table '%s' generated from %s:", TABLE_NAME, rowsFromDataRDD.collect()));
 		definedSchemaDataFrame.show();
-
 	}
 }

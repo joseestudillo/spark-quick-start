@@ -1,25 +1,18 @@
-target/
-bin/
-.classpath
-.project
-.settings/
+*.DS_Store
+*.iml
+.DS_Store
 .cache-main
 .cache-tests
-/build/
-
-# OSX
-.DS_Store
-
-# sbt
-project/target/
-project/project/
-
-# gradle
+.classpath
 .gradle/
-
-# derby
+.idea/
+.project
+.settings/
+/build/
+bin/
 derby.log
 metastore_db/
-
-# spark	
+project/project/
+project/target/
 spark_database/
+target/

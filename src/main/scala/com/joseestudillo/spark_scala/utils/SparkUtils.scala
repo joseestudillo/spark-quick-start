@@ -17,10 +17,10 @@ object SparkUtils {
   }
 
   def getClasspathFileURI(filename: String): String = {
-    s"${SparkUtils.getClass.getClassLoader().getResource("")}/${filename}"
+    s"${SparkUtils.getClass.getClassLoader().getResource("")}/$filename"
   }
 
   def getClasspathFilePath(filename: String): String = {
-    s"${SparkUtils.getClass.getClassLoader().getResource("").getPath()}/${filename}"
+    s"${SparkUtils.getClass.getClassLoader().getResource("").getPath()}/$filename"
   }
 }

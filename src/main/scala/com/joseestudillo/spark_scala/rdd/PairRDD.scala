@@ -7,7 +7,8 @@ import org.slf4j.LoggerFactory
 import com.typesafe.scalalogging.Logger
 
 object PairRDD {
-  val log = Logger(LoggerFactory.getLogger(getClass.getName));
+  
+  val log = Logger(LoggerFactory.getLogger(getClass.getName))
 
   def main(args: Array[String]) {
     val host = if (args.length > 0) args(0) else SparkUtils.LOCAL_MASTER_ID
@@ -17,8 +18,8 @@ object PairRDD {
     val sc = new SparkContext(conf)
 
 
-    //
+    //TODO
     
-    sc.stop();
+    sc.stop()
   }
 }
